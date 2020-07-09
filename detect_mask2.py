@@ -30,7 +30,7 @@ import numpy as np
 import os
 from PIL import Image
 import re
-#import pyttsx3
+import pygame
 import tflite_runtime.interpreter as tflite
 
 Object = collections.namedtuple('Object', ['id', 'score', 'bbox'])
@@ -69,19 +69,22 @@ def get_output(interpreter, score_threshold, top_k, image_scale=1.0):
 
 def main():
     default_model_dir = './all_models'
-    #default_model = 'mobilenet_ssd_v2_face_quant_postprocess_edgetpu.tflite'  #
-    default_model = 'mobilenet_ssd_v2_coco_quant_postprocess.tflite'
-    default_labels = 'coco_labels.txt'  
     
+    #### In order to run on Laptop, tflite file before edgetpu compile should be used ###
+    #default_model = 'mobilenet_ssd_v2_face_quant_postprocess_edgetpu.tflite'  #
+    default_model = 'mobilenet_ssd_v2_coco_quant_postprocess.tflite'    
+        
+    #default_model2 = 'mask_detector_quant_edgetpu.tflite'
+    default_model2 = 'mask_detector_quant.tflite'    
+    #####################################################################################
+    
+    default_labels = 'coco_labels.txt'      
     
     parser = argparse.ArgumentParser()
     parser.add_argument('--model', help='.tflite model path',
                         default = default_model)
                         #default=os.path.join(default_model_dir,default_model))                        
-    
-            
-    default_model2 = 'mask_detector_quant.tflite'
-    #default_model2 = 'mask_detector_quant_edgetpu.tflite'
+
     parser.add_argument('--model2', help='.tflite model path',
                         default=default_model2)       
     
@@ -98,6 +101,9 @@ def main():
          
 
     print('Loading {} with {} labels.'.format(args.model, args.labels))
+        
+    ### Some functions in common.make_interpreter needs Edge TPU ########################
+    ### Simply use tflite.Interpreter method on laptop
     #interpreter = common.make_interpreter(args.model)
     interpreter = tflite.Interpreter(model_path = args.model)
     interpreter.allocate_tensors()
@@ -105,13 +111,18 @@ def main():
     #interpreter2 = common.make_interpreter(args.model2)
     interpreter2 = tflite.Interpreter(model_path = args.model2)
     interpreter2.allocate_tensors()
-    print('Interpreter 2 loaded')
+    #####################################################################################
     
+    print('Interpreter 2 loaded')    
     
     labels = load_labels(args.labels)
-
     cap = cv2.VideoCapture(args.camera_idx)
-
+    
+    #Initialize and configure pygame for warning messages    
+    pygame.init()
+    beep = pygame.mixer.Sound("coral.wav")
+    beep_switch = False
+    
     frame_no = 0
 
     while cap.isOpened():
@@ -135,27 +146,20 @@ def main():
         
         i = 0
         
-        for i in range(len(objs)-1,-1, -1):            
+        for i in range(len(objs)):            
             x0, y0, x1, y1 = list(objs[i].bbox)
             x0, y0, x1, y1 = int(x0*width), int(y0*height), int(x1*width), int(y1*height)                        
-            pil_im2 = Image.fromarray(cv2_im_rgb[y0:y1, x0:x1])
-            print("Bf NN: ", frame_no, i, x0, y0)
+            pil_im2 = Image.fromarray(cv2_im_rgb[y0:y1, x0:x1])            
             common.set_input2(interpreter2, pil_im2)
             output_data = common.output_tensor2(interpreter2)
-            interpreter2.invoke()       
-            print("Af NN: ", frame_no, i, x0, y0)
-            print("Output data: ", output_data)
+            interpreter2.invoke()                   
             mask_data.append((len(objs) - 1 - i, output_data))   
         
         j = 0
                 
         for j in range(len(objs)):            
             x0, y0, x1, y1 = list(objs[j].bbox)
-            x0, y0, x1, y1 = int(x0*width), int(y0*height), int(x1*width), int(y1*height)           
-            
-            print("2nd loop: ", frame_no, j, x0, y0)            
-            print(list(filter(lambda x: x[0] == j, mask_data)))
-            
+            x0, y0, x1, y1 = int(x0*width), int(y0*height), int(x1*width), int(y1*height)                       
             output = list(filter(lambda x: x[0] == j, mask_data))     
             
             mask, withoutMask = output[0][1]
@@ -175,6 +179,9 @@ def main():
                                  cv2.FONT_HERSHEY_SIMPLEX, 1.0, color, 2)
             
         frame_no += 1        
+        
+        if noMaskCount > 0 and frame_no % 10 == 0 and frame_no > 0:
+            beep.play()      
         
         
         """ Below code triggers an error

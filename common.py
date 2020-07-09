@@ -53,19 +53,12 @@ def output_tensor(interpreter, i):
     """Returns dequantized output tensor if quantized before."""
     output_details = interpreter.get_output_details()[i]
     output_data = np.squeeze(interpreter.tensor(output_details['index'])())
-    
-    #print('output_details')
-    #print(output_details)
+   
     
     if 'quantization' not in output_details:
         return output_data
     scale, zero_point = output_details['quantization']
-    
-    #print('Scale:', scale)
-    #print('output data:')
-    #print(output_data)
-    
-    
+   
     if scale == 0:
         return output_data - zero_point
     return scale * (output_data - zero_point)
