@@ -55,6 +55,10 @@ interpreter2.allocate_tensors()
 ```
 
 
+
+
+Below is original description from Google.
+
 # OpenCV camera examples with Coral
 
 This folder contains example code using [OpenCV](https://github.com/opencv/opencv) to obtain
