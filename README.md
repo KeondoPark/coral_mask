@@ -1,3 +1,60 @@
+# Mask detection with Coral
+This python codes run on Google Coral dev board and detect whether any person wears a mask or not
+from video stream. The detection result is shown on connected monitor.
+The codes are modified from Google's default sample face detection codes, using opencv:
+https://github.com/google-coral/examples-camera/tree/master/opencv
+
+## Changes made from Google's default sample
+1. Mask detection neural network is added
+
+    We trained mask detection neural network and added another inference for this neural network. I will call this "MaskNet" from now on.
+    "Interpreter2" in the codes runs the inference for this neural network.
+    Basically, after the face detection neural network('mobilenet_ssd_v2_face_quant_postprocess_edgetpu.tflite') is inferenced, MaskNet is run on the resulting faces.
+    This neural network outputs binary classification result: Mask or NoMask.
+    
+    If you want to see the NN training codes see "train_mask_detector" folder.
+    
+2. Voice output is added
+
+    We added voice output so that Coral can warn if there is anybody not wearing a mask.
+    We used PyGame module for this.
+    
+3. Some funcions are added in common.py
+
+    We added some functions for the inference of MaskNet in common.py.
+
+
+## How to run on laptop
+There are some parts in the code you need to change if you want to run this code on your laptop
+(WHere there is no EdgeTPU).
+Find below code blocks in the main() function, and modify as below.
+
+```
+#### In order to run on Laptop, tflite file before edgetpu compile should be used ###
+#default_model = 'mobilenet_ssd_v2_face_quant_postprocess_edgetpu.tflite'  #
+default_model = 'mobilenet_ssd_v2_coco_quant_postprocess.tflite'    
+
+#default_model2 = 'mask_detector_quant_edgetpu.tflite'
+default_model2 = 'mask_detector_quant.tflite'    
+#####################################################################################    
+```
+    
+And 
+    
+```
+### Some functions in common.make_interpreter needs Edge TPU ########################
+### Simply use tflite.Interpreter method on laptop
+#interpreter = common.make_interpreter(args.model)
+interpreter = tflite.Interpreter(model_path = args.model)
+interpreter.allocate_tensors()
+
+#interpreter2 = common.make_interpreter(args.model2)
+interpreter2 = tflite.Interpreter(model_path = args.model2)
+interpreter2.allocate_tensors()
+#####################################################################################  
+```
+
+
 # OpenCV camera examples with Coral
 
 This folder contains example code using [OpenCV](https://github.com/opencv/opencv) to obtain
