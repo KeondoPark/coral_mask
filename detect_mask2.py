@@ -75,7 +75,7 @@ def main():
     default_model = 'mobilenet_ssd_v2_coco_quant_postprocess.tflite'    
         
     #default_model2 = 'mask_detector_quant_edgetpu.tflite'
-    default_model2 = 'mask_detector_quant.tflite'    
+    default_model2 = 'mask_detector_quant_v2.tflite'    
     #####################################################################################
     
     default_labels = 'coco_labels.txt'      

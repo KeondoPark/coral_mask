@@ -1,0 +1,14 @@
+Edge TPU Compiler version 14.1.317412892
+Input: mask_detector_quant_v2.tflite
+Output: mask_detector_quant_v2_edgetpu.tflite
+
+Operator                       Count      Status
+
+SOFTMAX                        1          Mapped to Edge TPU
+PAD                            5          Mapped to Edge TPU
+ADD                            10         Mapped to Edge TPU
+QUANTIZE                       2          Mapped to Edge TPU
+FULLY_CONNECTED                2          Mapped to Edge TPU
+CONV_2D                        35         Mapped to Edge TPU
+AVERAGE_POOL_2D                1          Mapped to Edge TPU
+DEPTHWISE_CONV_2D              17         Mapped to Edge TPU
