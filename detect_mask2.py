@@ -109,8 +109,8 @@ def main():
     interpreter.allocate_tensors()
         
     #interpreter2 = common.make_interpreter(args.model2)
-    # interpreter2 = tflite.Interpreter(model_path = args.model2)
-    interpreter2 = tflite.Interpreter(model_path = args.model2, experimental_delegates=[tflite.load_delegate('libedgetpu.so.1')]) # wc amend
+    interpreter2 = tflite.Interpreter(model_path = args.model2)
+    #interpreter2 = tflite.Interpreter(model_path = args.model2, experimental_delegates=[tflite.load_delegate('libedgetpu.so.1')]) # wc amend
     interpreter2.allocate_tensors()
     #####################################################################################
     
