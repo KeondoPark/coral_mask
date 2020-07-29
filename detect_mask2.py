@@ -32,6 +32,7 @@ from PIL import Image
 import re
 import pygame
 import tflite_runtime.interpreter as tflite
+#from tflite_runtime.interpreter import load_delegate # wc add
 
 Object = collections.namedtuple('Object', ['id', 'score', 'bbox'])
 
@@ -104,8 +105,8 @@ def main():
         
     ### Some functions in common.make_interpreter needs Edge TPU ########################
     ### Simply use tflite.Interpreter method on laptop
-    #interpreter = common.make_interpreter(args.model)
-    interpreter = tflite.Interpreter(model_path = args.model)
+    interpreter = common.make_interpreter(args.model)
+    #interpreter = tflite.Interpreter(model_path = args.model)
     interpreter.allocate_tensors()
         
     interpreter2 = common.make_interpreter(args.model2)
