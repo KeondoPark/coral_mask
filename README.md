@@ -114,3 +114,33 @@ python3 detect.py
 By default, this uses the ```mobilenet_ssd_v2_coco_quant_postprocess_edgetpu.tflite``` model.
 
 You can change the model and the labels file using flags ```--model``` and ```--labels```.
+
+
+## Quantization
+You got to have .tflite file to quantize and the environment of Jupyter Terminal is needed(if other method found, please tell us so that we can share!). Our reference [here](https://colab.research.google.com/github/google-coral/tutorials/blob/master/retrain_classification_ptq_tf1.ipynb#scrollTo=joxrIB0I3cdi).  
+
+
+
+1. Go to Directory that .tflite is in.
+2. Run Below command **line by line** .It is the process of installing 'edgetpu-compiler'
+
+```
+! curl https://packages.cloud.google.com/apt/doc/apt-key.gpg | sudo apt-key add -
+
+! echo "deb https://packages.cloud.google.com/apt coral-edgetpu-stable main" | sudo tee /etc/apt/sources.list.d/coral-edgetpu.list
+
+! sudo apt-get update
+
+! sudo apt-get install edgetpu-compiler	
+```
+
+3. And Finally Quantize the model
+
+```
+! edgetpu_compiler [your_model_name].tflite
+
+#Below is code we executed, utilize the code as an example
+! edgetpu_compiler mask_detector_quant_v2.tflite
+```
+
+4. In the same dir, name is the same but '_edgetpu' added will be seen. Here we can see file named 'mask_detector_quant_v2 **_edgetpu**.tflite'
