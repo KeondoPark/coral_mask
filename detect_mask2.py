@@ -71,8 +71,8 @@ def main():
     default_model_dir = './all_models'
     
     #### In order to run on Laptop, tflite file before edgetpu compile should be used ###
-    #default_model = 'mobilenet_ssd_v2_face_quant_postprocess_edgetpu.tflite'  #
-    default_model = 'mobilenet_ssd_v2_coco_quant_postprocess.tflite'    
+    default_model = 'mobilenet_ssd_v2_face_quant_postprocess_edgetpu.tflite'  #wc amend
+    #default_model = 'mobilenet_ssd_v2_coco_quant_postprocess.tflite'    
         
     #default_model2 = 'mask_detector_quant_edgetpu.tflite'
     default_model2 = 'mask_detector_quant_v2_edgetpu.tflite'    #wc amend
