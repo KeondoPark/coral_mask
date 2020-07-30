@@ -116,12 +116,18 @@ By default, this uses the ```mobilenet_ssd_v2_coco_quant_postprocess_edgetpu.tfl
 You can change the model and the labels file using flags ```--model``` and ```--labels```.
 
 
-## Quantization
+# Quantization
 You got to have .tflite file to quantize and the environment of Jupyter Terminal is needed(if other method found, please tell us so that we can share!). Our reference [here](https://colab.research.google.com/github/google-coral/tutorials/blob/master/retrain_classification_ptq_tf1.ipynb#scrollTo=joxrIB0I3cdi).  
 
 
 
-1. Go to Directory that .tflite is in.
+1. Go to Directory that .tflite is in.  
+```
+cd [your_dir_that_model_exists]
+
+# example #
+cd coral_mask
+```
 2. Run Below command **line by line** .It is the process of installing 'edgetpu-compiler'
 
 ```
@@ -139,7 +145,7 @@ You got to have .tflite file to quantize and the environment of Jupyter Terminal
 ```
 ! edgetpu_compiler [your_model_name].tflite
 
-#Below is code we executed, utilize the code as an example
+# example #
 ! edgetpu_compiler mask_detector_quant_v2.tflite
 ```
 
