@@ -128,6 +128,7 @@ cd [your_dir_that_model_exists]
 # example #
 cd coral_mask
 ```
+
 2. Run Below command **line by line** .It is the process of installing 'edgetpu-compiler'
 
 ```
@@ -150,3 +151,5 @@ cd coral_mask
 ```
 
 4. In the same dir, name is the same but '_edgetpu' added will be seen. Here we can see file named 'mask_detector_quant_v2 **_edgetpu**.tflite'
+
+5. Deploy the ~_edgetpu.tflite file together to your Coral device, so that Coral can utilize the quantized tflite model.

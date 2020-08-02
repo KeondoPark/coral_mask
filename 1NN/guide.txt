@@ -1,0 +1,16 @@
+
+# 1.
+mask_model_train ; 모델 돌리면서 checkpoint 생성됨
+mask_export_model ; frozen_graph 로 export
+
+# 2.
+참고 - https://www.tensorflow.org/api_docs/python/tf/lite/TFLiteConverter
+
+# 3. Convert 후 돌리기
+edgetpu_classify_server \
+--model ${DEMO_FILES}/마스크넷tflite파일 \
+--labels ${DEMO_FILES}/마스크label파일
+
+참고 - https://coral.ai/docs/dev-board/camera/#using-a-streaming-server
+
+1 - nomask, 2 - mask
