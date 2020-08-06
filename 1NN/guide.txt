@@ -35,11 +35,15 @@ edgetpu_detect_server \
 
 
 edgetpu_detect_server \
---model ~/coral_mask/1NN/mask_model_export_tflite4/one_nn_edgetpu.tflite \
---labels ~/coral_mask/1NN/mask_model_export_tflite3/one_nn_label.txt
+--model ~/coral_mask/1NN/mask_model_export_tflite6/one_nn_edgetpu.tflite \
+--labels ~/coral_mask/1NN/mask_model_export_tflite6/one_nn_label.txt
 
 # gsds wifi named 'ambientai' address
 192.168.0.23:4664
 
 # gsds wifi named 'seminar_5g' address
 192.168.0.20:4664
+
+
+# wc home wifi named 'lwclwc' address
+192.168.0.9:4664
