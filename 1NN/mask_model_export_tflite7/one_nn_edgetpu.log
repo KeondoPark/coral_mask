@@ -1,0 +1,14 @@
+Edge TPU Compiler version 14.1.317412892
+Input: one_nn.tflite
+Output: one_nn_edgetpu.tflite
+
+Operator                       Count      Status
+
+RESHAPE                        13         Mapped to Edge TPU
+CONCATENATION                  2          Mapped to Edge TPU
+PAD                            23         Mapped to Edge TPU
+CUSTOM                         1          Operation is working on an unsupported data type
+ADD                            10         Mapped to Edge TPU
+CONV_2D                        55         Mapped to Edge TPU
+DEPTHWISE_CONV_2D              17         Mapped to Edge TPU
+LOGISTIC                       1          Mapped to Edge TPU

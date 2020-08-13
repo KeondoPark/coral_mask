@@ -44,6 +44,5 @@ edgetpu_detect_server \
 # gsds wifi named 'seminar_5g' address
 192.168.0.20:4664
 
-
 # wc home wifi named 'lwclwc' address
 192.168.0.9:4664
