@@ -1,0 +1,26 @@
+<annotation>
+	<folder>kihong</folder>
+	<filename>00148.jpg</filename>
+	<path>/home/coral/Downloads/kihong/00148.jpg</path>
+	<source>
+		<database>Unknown</database>
+	</source>
+	<size>
+		<width>1315</width>
+		<height>2578</height>
+		<depth>3</depth>
+	</size>
+	<segmented>0</segmented>
+	<object>
+		<name>mask</name>
+		<pose>Unspecified</pose>
+		<truncated>0</truncated>
+		<difficult>0</difficult>
+		<bndbox>
+			<xmin>207</xmin>
+			<ymin>596</ymin>
+			<xmax>911</xmax>
+			<ymax>1511</ymax>
+		</bndbox>
+	</object>
+</annotation>

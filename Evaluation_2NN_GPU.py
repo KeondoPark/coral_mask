@@ -1,5 +1,5 @@
 """An evaluation module that retrieves test accuracies for quantized 2NN model.
-TEST_DATA= ?
+Test Images: test_img, Test XML: test_xml
 Run evaluation model:
 python3 detect.py \
 """
@@ -106,8 +106,8 @@ def main():
     labels = load_labels(args.labels)
     
     # Load Test Data - ground truth, image
-    test_dir = 'kihong'
-    test_img_dir = 'TestImages'
+    test_dir = 'test_xml'
+    test_img_dir = 'test_img'
     filenames = os.listdir(test_dir)
     full_filenames = []
     for filename in filenames:
@@ -122,6 +122,7 @@ def main():
             bbox = []
             if child.tag == 'filename':
                 image_filename = child.text
+                print('------------------------------', image_filename, '----------------------------------------------------------')
             if child.tag == 'size':
                 width_height = []
                 for subchild in child:
@@ -149,8 +150,6 @@ def main():
         print(objs)
 
         height, width, channels = cv2_im.shape
-            
-        noMaskCount = 0
         
         mask_data = []
 
@@ -166,7 +165,7 @@ def main():
             
         print(mask_data)
         
-        print('next file----------------------------------------------------------')
+        print('-------------------------------next file----------------------------------------------------------')
 
 if __name__ == '__main__':
     main()
