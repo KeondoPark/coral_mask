@@ -160,6 +160,6 @@ Run command is below
 
 ```
 edgetpu_detect_server \
---model ~/coral_mask/1NN/mask_model_export_tflite6/one_nn_edgetpu.tflite \
---labels ~/coral_mask/1NN/mask_model_export_tflite6/one_nn_label.txt
+--model ~/coral_mask/1NN/quantized/one_nn8_edgetpu.tflite \
+--labels ~/coral_mask/1NN/quantized/one_nn_label.txt
 ```
