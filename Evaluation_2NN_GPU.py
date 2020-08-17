@@ -134,6 +134,7 @@ def main():
                     if subchild.tag == 'bndbox':
                         for subsubchild in subchild:
                             bbox.append(int(subsubchild.text))
+        # final_bbox = [bbox[0], bbox[1], bbox[2], bbox[3]]                    
         final_bbox = [bbox[0]/width_height[0], bbox[1]/width_height[1], bbox[2]/width_height[0], bbox[3]/width_height[1]]
         print(final_bbox)
         image_path = os.path.join(test_img_dir, image_filename)
@@ -148,6 +149,25 @@ def main():
         interpreter.invoke()
         objs = get_output(interpreter, score_threshold=args.threshold, top_k=args.top_k)
         print(objs)
+        filenum_xml = filename.split('\\')[1]
+        filenum = filenum_xml.split('.')[0]
+        labenc = objs[0].id
+        if labenc == 0:
+            lab = "mask"
+        else:
+            lab = "nomask"
+
+        print(filenum)
+        with open("./mAP/input/ground-truth/{}.txt".format(filenum), "w") as file:   
+            file.write(str(test_label) + ' ')
+            for item in final_bbox:
+                file.write("%s " % item)
+        print(test_label)
+        with open("./mAP/input/detection-results/{}.txt".format(filenum), "w") as file:
+            file.write(lab + ' ')
+            file.write(str(objs[0].score) + ' ')
+            for item in objs[0].bbox:
+                file.write("%s " % item)
 
         height, width, channels = cv2_im.shape
         
