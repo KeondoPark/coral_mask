@@ -119,6 +119,18 @@ You can change the model and the labels file using flags ```--model``` and ```--
 # Quantization
 You got to have .tflite file to quantize and the environment of Jupyter Terminal is needed(if other method found, please tell us so that we can share!). Our reference [here](https://colab.research.google.com/github/google-coral/tutorials/blob/master/retrain_classification_ptq_tf1.ipynb#scrollTo=joxrIB0I3cdi).  
 
+## Bazel
+
+```
+bazel run -c opt tensorflow/lite/toco:toco -- \
+--input_file=/Users/woolee/mldl_project/github/coral_mask/1NN/mask_model_export_tflite9/tflite_graph.pb \
+--output_file=/Users/woolee/mldl_project/github/coral_mask/1NN/quantized/one_nn9.tflite \
+--input_shapes=1,320,320,3 \
+--input_arrays=normalized_input_image_tensor \
+--output_arrays='TFLite_Detection_PostProcess','TFLite_Detection_PostProcess:1','TFLite_Detection_PostProcess:2','TFLite_Detection_PostProcess:3'  \
+--inference_type=QUANTIZED_UINT8 \
+--allow_custom_ops \ 
+```
 
 
 1. Go to Directory that .tflite is in.  
