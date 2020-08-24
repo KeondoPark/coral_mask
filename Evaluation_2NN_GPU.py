@@ -16,6 +16,12 @@ import re
 #import pyttsx3
 import tflite_runtime.interpreter as tflite
 import xml.etree.ElementTree as ET
+import shutil
+
+shutil.rmtree("./mAP/input/ground-truth")
+shutil.rmtree("./mAP/input/detection-results")
+os.makedirs("./mAP/input/ground-truth")
+os.makedirs("./mAP/input/detection-results")
 
 Object = collections.namedtuple('Object', ['id', 'score', 'bbox'])
 
@@ -212,7 +218,7 @@ def main():
                 dummy += 1
 
             final_truth = ground_truths[min_diff_index]
-            
+
             # Write label percentage, ground truth bbox and obj detection bbox to .txt file
             with open("./mAP/input/ground-truth/{}.txt".format(filenum), "a+") as file:
                 file.write(str(final_truth[0]) + ' ')
