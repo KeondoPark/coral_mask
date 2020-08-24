@@ -117,7 +117,8 @@ def main():
     for filename in full_filenames:
         print(f'---------------------------', filename, '---------------------------')
         # get filenum
-        filenum = filename.split('/')[2].split('.')[0]
+        filenum = filename[-9:-4]
+        # filenum = filename.split('/')[2].split('.')[0]
 
         # set root from xml
         tree = ET.parse(filename)
@@ -130,7 +131,7 @@ def main():
         # Load Image, get height and width
         cv2_im = cv2.imread(image_path,1)
         height, width, channels = cv2_im.shape
-        print(height, width)
+        print('height and width: ', height, width)
 
         # Get ground truths
         all = root.findall('object')
@@ -182,10 +183,10 @@ def main():
             output_data = common.output_tensor2(interpreter2)
             interpreter2.invoke()
 
-            print(output_data)
+            # print(output_data)
             mask = output_data[0]
             withoutMask = output_data[1]
-            print('mask_percentage: ', mask, 'nomask_percentage: ', withoutMask) 
+            print('mask_percentage: ', mask, ', nomask_percentage: ', withoutMask) 
 
             if mask > withoutMask:
                 label = "mask"
@@ -211,24 +212,26 @@ def main():
                 dummy += 1
 
             final_truth = ground_truths[min_diff_index]
-
-            # Write label percentage, groun truth bbox and obj detection bbox to .txt file
-            with open("./mAP/input/ground-truth/{}.txt".format(filenum), "w") as file:   
+            
+            # Write label percentage, ground truth bbox and obj detection bbox to .txt file
+            with open("./mAP/input/ground-truth/{}.txt".format(filenum), "a+") as file:
                 file.write(str(final_truth[0]) + ' ')
                 for item in final_truth[1]:
                     file.write("%s " % item)
+                file.write("\n")
 
-            with open("./mAP/input/detection-results/{}.txt".format(filenum), "w") as file:
+            with open("./mAP/input/detection-results/{}.txt".format(filenum), "a+") as file:
                 file.write(label + ' ')
                 file.write(str(score) + ' ')
                 for item in obj_bbox:
                     file.write("%s " % item)
+                file.write("\n")
 
-            filenum = filenum + '1'
+            # filenum = filenum + '1'
 
         window_name = 'Image'
-        cv2.imshow(window_name, cv2_im)
-        cv2.waitKey()
+        # cv2.imshow(window_name, cv2_im)
+        # cv2.waitKey()
         
         print('-------------------------------next file----------------------------------------------------------')
 
