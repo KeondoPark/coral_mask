@@ -1,0 +1,26 @@
+<annotation>
+	<folder>kisung</folder>
+	<filename>00271.jpg</filename>
+	<path>/home/coral/Downloads/kisung/00271.jpg</path>
+	<source>
+		<database>Unknown</database>
+	</source>
+	<size>
+		<width>327</width>
+		<height>433</height>
+		<depth>3</depth>
+	</size>
+	<segmented>0</segmented>
+	<object>
+		<name>mask</name>
+		<pose>Unspecified</pose>
+		<truncated>0</truncated>
+		<difficult>0</difficult>
+		<bndbox>
+			<xmin>76</xmin>
+			<ymin>121</ymin>
+			<xmax>261</xmax>
+			<ymax>369</ymax>
+		</bndbox>
+	</object>
+</annotation>

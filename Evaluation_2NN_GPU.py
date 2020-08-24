@@ -1,7 +1,7 @@
 """An evaluation module that retrieves test accuracies for quantized 2NN model.
-Test Images: test_img, Test XML: test_xml
+Test Folder = for_evaluation(test_set)
 Run evaluation model:
-python3 detect.py \
+python3 Evaluation_2NN_GPU.py \
 """
 
 # Import necessary modules/packages
@@ -71,8 +71,8 @@ def main():
     
     # Set face detection model
     # default_model = 'mobilenet_ssd_v2_face_quant_postprocess_edgetpu.tflite' # Coral ver
-    default_model = 'mobilenet_ssd_v2_coco_quant_postprocess.tflite' # GPU ver
-    default_labels = 'coco_labels.txt'  
+    default_model = 'mobilenet_ssd_v2_face_quant_postprocess.tflite' # GPU ver
+    default_labels = 'face_labels.txt'  
     
     parser = argparse.ArgumentParser()
     parser.add_argument('--model', help='.tflite model path',
@@ -106,8 +106,8 @@ def main():
     labels = load_labels(args.labels)
     
     # Load Test Data - ground truth, image
-    test_dir = 'test_xml'
-    test_img_dir = 'test_img'
+    test_dir = 'for_evaluation(test_set)/test'
+    test_img_dir = 'for_evaluation(test_set)/test_img'
     filenames = os.listdir(test_dir)
     full_filenames = []
     for filename in filenames:
@@ -115,32 +115,47 @@ def main():
         full_filenames.append(full_filename)
     
     for filename in full_filenames:
+        print(f'---------------------------', filename, '---------------------------')
+        # get filenum
+        filenum = filename.split('/')[2].split('.')[0]
+
+        # set root from xml
         tree = ET.parse(filename)
         root = tree.getroot()
-        for child in root:
-            test_label = ''
-            bbox = []
-            if child.tag == 'filename':
-                image_filename = child.text
-                print('------------------------------', image_filename, '----------------------------------------------------------')
-            if child.tag == 'size':
-                width_height = []
-                for subchild in child:
-                    width_height.append(int(subchild.text))
-            if child.tag == 'object':
-                for subchild in child:
-                    if subchild.tag == 'name':
-                        test_label = subchild.text
-                    if subchild.tag == 'bndbox':
-                        for subsubchild in subchild:
-                            bbox.append(int(subsubchild.text))
-        # final_bbox = [bbox[0], bbox[1], bbox[2], bbox[3]]                    
-        final_bbox = [bbox[0]/width_height[0], bbox[1]/width_height[1], bbox[2]/width_height[0], bbox[3]/width_height[1]]
-        print(final_bbox)
-        image_path = os.path.join(test_img_dir, image_filename)
-        
-        cv2_im = cv2.imread(image_path,1)
 
+        # find img directory
+        image_filename = root.find('filename').text
+        image_path = os.path.join(test_img_dir, image_filename)
+
+        # Load Image, get height and width
+        cv2_im = cv2.imread(image_path,1)
+        height, width, channels = cv2_im.shape
+        print(height, width)
+
+        # Get ground truths
+        all = root.findall('object')
+        ground_truths  = []
+        for object in all:
+            # get name, bndbox for labels and bbox
+            name = object.find('name')
+            bndbox = object.find('bndbox')
+
+            # set test label to name.text (mask or nomask)
+            test_label = name.text
+            bbox = []
+            for element in bndbox:
+                bbox.append(int(element.text))
+            xmin, ymin, xmax, ymax = bbox
+            top_left, bottom_right = (xmin, ymax), (xmax, ymin)
+            color = (0, 0, 255)
+            thickness = 2
+            cv2.rectangle(cv2_im, top_left, bottom_right, color, thickness)
+            test_bbox = [bbox[0]/width, bbox[1]/height, bbox[2]/width, bbox[3]/height]
+
+            ground_truths.append([test_label, test_bbox])
+        
+        print('ground_truths: ', ground_truths)
+        
         # Evaluation of object detection
         cv2_im_rgb = cv2.cvtColor(cv2_im, cv2.COLOR_BGR2RGB)
         pil_im = Image.fromarray(cv2_im_rgb)
@@ -148,42 +163,72 @@ def main():
         common.set_input(interpreter, pil_im)
         interpreter.invoke()
         objs = get_output(interpreter, score_threshold=args.threshold, top_k=args.top_k)
-        print(objs)
-        filenum_xml = filename.split('\\')[1]
-        filenum = filenum_xml.split('.')[0]
-        labenc = objs[0].id
-        if labenc == 0:
-            lab = "mask"
-        else:
-            lab = "nomask"
-
-        print(filenum)
-        with open("./mAP/input/ground-truth/{}.txt".format(filenum), "w") as file:   
-            file.write(str(test_label) + ' ')
-            for item in final_bbox:
-                file.write("%s " % item)
-        print(test_label)
-        with open("./mAP/input/detection-results/{}.txt".format(filenum), "w") as file:
-            file.write(lab + ' ')
-            file.write(str(objs[0].score) + ' ')
-            for item in objs[0].bbox:
-                file.write("%s " % item)
-
-        height, width, channels = cv2_im.shape
+        print('detection result:', objs)
         
-        mask_data = []
-
         for i in range(len(objs)):
-            x0, y0, x1, y1 = list(objs[i].bbox)
-            x0, y0, x1, y1 = int(x0*width), int(y0*height), int(x1*width), int(y1*height)                        
-            pil_im2 = Image.fromarray(cv2_im_rgb[y0:y1, x0:x1])            
+            if objs[i].id != 0:
+                continue
+            obj_bbox = list(objs[i].bbox)
+            xmin, ymin, xmax, ymax = obj_bbox
+            xmin, ymin, xmax, ymax = int(xmin*width), int(ymin*height), int(xmax*width), int(ymax*height)
+            print(xmin, ymin, xmax, ymax)
+            top_left, bottom_right = (xmin, ymax), (xmax, ymin)
+            color = (255, 0, 0)
+            thickness = 2
+            #cv2.rectangle(cv2_im, top_left, bottom_right, color, thickness)
+
+            pil_im2 = Image.fromarray(cv2_im_rgb[ymin:ymax, xmin:xmax])            
             common.set_input2(interpreter2, pil_im2)
             output_data = common.output_tensor2(interpreter2)
             interpreter2.invoke()
-            if objs[i].id == 0:                   
-                mask_data.append(('mask_percentage', output_data))
+
+            print(output_data)
+            mask = output_data[0]
+            withoutMask = output_data[1]
+            print('mask_percentage: ', mask, 'nomask_percentage: ', withoutMask) 
+
+            if mask > withoutMask:
+                label = "mask"
+                score = mask
+            else:
+                label = "nomask"
+                score = withoutMask
+            print(obj_bbox, label, score)
             
-        print(mask_data)
+            dummy = 0
+            min_diff = 1000000
+            min_diff_index = 0
+            while dummy < len(ground_truths):
+                diff = 0
+                for j in range(len(obj_bbox)):
+                    minus = abs(obj_bbox[j] - ground_truths[dummy][1][j])
+                    diff = diff + minus
+                
+                if diff < min_diff:
+                    min_diff = diff
+                    min_diff_index = dummy
+
+                dummy += 1
+
+            final_truth = ground_truths[min_diff_index]
+
+            # Write label percentage, groun truth bbox and obj detection bbox to .txt file
+            with open("./mAP/input/ground-truth/{}.txt".format(filenum), "w") as file:   
+                file.write(str(final_truth[0]) + ' ')
+                for item in final_truth[1]:
+                    file.write("%s " % item)
+
+            with open("./mAP/input/detection-results/{}.txt".format(filenum), "w") as file:
+                file.write(label + ' ')
+                file.write(str(score) + ' ')
+                for item in obj_bbox:
+                    file.write("%s " % item)
+
+            filenum = filenum + '1'
+
+        window_name = 'Image'
+        cv2.imshow(window_name, cv2_im)
+        cv2.waitKey()
         
         print('-------------------------------next file----------------------------------------------------------')
 

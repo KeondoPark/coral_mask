@@ -1,0 +1,26 @@
+<annotation>
+	<folder>(unlabeled)w_mask</folder>
+	<filename>01048.jpg</filename>
+	<path>/home/chai/Dropbox/codes/lab/faces_for_coral_summer_project/common/image/(unlabeled)w_mask/01048.jpg</path>
+	<source>
+		<database>Unknown</database>
+	</source>
+	<size>
+		<width>3024</width>
+		<height>3024</height>
+		<depth>3</depth>
+	</size>
+	<segmented>0</segmented>
+	<object>
+		<name>mask</name>
+		<pose>Unspecified</pose>
+		<truncated>0</truncated>
+		<difficult>0</difficult>
+		<bndbox>
+			<xmin>1189</xmin>
+			<ymin>1020</ymin>
+			<xmax>1811</xmax>
+			<ymax>2158</ymax>
+		</bndbox>
+	</object>
+</annotation>

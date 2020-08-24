@@ -1,0 +1,26 @@
+<annotation>
+	<folder>wonyoung2</folder>
+	<filename>00310.jpg</filename>
+	<path>/home/coral/Downloads/wonyoung2/00310.jpg</path>
+	<source>
+		<database>Unknown</database>
+	</source>
+	<size>
+		<width>336</width>
+		<height>427</height>
+		<depth>3</depth>
+	</size>
+	<segmented>0</segmented>
+	<object>
+		<name>mask</name>
+		<pose>Unspecified</pose>
+		<truncated>0</truncated>
+		<difficult>0</difficult>
+		<bndbox>
+			<xmin>52</xmin>
+			<ymin>101</ymin>
+			<xmax>231</xmax>
+			<ymax>328</ymax>
+		</bndbox>
+	</object>
+</annotation>

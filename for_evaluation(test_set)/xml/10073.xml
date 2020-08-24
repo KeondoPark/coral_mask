@@ -1,0 +1,26 @@
+<annotation>
+	<folder>wo_mask</folder>
+	<filename>10073.jpg</filename>
+	<path>/home/chai/Dropbox/codes/lab/wo_mask/10073.jpg</path>
+	<source>
+		<database>Unknown</database>
+	</source>
+	<size>
+		<width>512</width>
+		<height>594</height>
+		<depth>3</depth>
+	</size>
+	<segmented>0</segmented>
+	<object>
+		<name>nomask</name>
+		<pose>Unspecified</pose>
+		<truncated>0</truncated>
+		<difficult>0</difficult>
+		<bndbox>
+			<xmin>101</xmin>
+			<ymin>46</ymin>
+			<xmax>380</xmax>
+			<ymax>428</ymax>
+		</bndbox>
+	</object>
+</annotation>

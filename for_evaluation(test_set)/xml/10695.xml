@@ -1,0 +1,26 @@
+<annotation>
+	<folder>wo_mask</folder>
+	<filename>10695.jpg</filename>
+	<path>/home/ambientai/Downloads/consolidated_data_rename/wo_mask/10695.jpg</path>
+	<source>
+		<database>Unknown</database>
+	</source>
+	<size>
+		<width>320</width>
+		<height>428</height>
+		<depth>3</depth>
+	</size>
+	<segmented>0</segmented>
+	<object>
+		<name>nomask</name>
+		<pose>Unspecified</pose>
+		<truncated>0</truncated>
+		<difficult>0</difficult>
+		<bndbox>
+			<xmin>63</xmin>
+			<ymin>95</ymin>
+			<xmax>251</xmax>
+			<ymax>374</ymax>
+		</bndbox>
+	</object>
+</annotation>

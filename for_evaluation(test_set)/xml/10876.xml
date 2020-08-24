@@ -1,0 +1,26 @@
+<annotation>
+	<folder>woochul2</folder>
+	<filename>10876.jpg</filename>
+	<path>/Users/woolee/mldl_project/z_data/consolidated_data_rename/woochul2/10876.jpg</path>
+	<source>
+		<database>Unknown</database>
+	</source>
+	<size>
+		<width>1329</width>
+		<height>1711</height>
+		<depth>3</depth>
+	</size>
+	<segmented>0</segmented>
+	<object>
+		<name>nomask</name>
+		<pose>Unspecified</pose>
+		<truncated>0</truncated>
+		<difficult>0</difficult>
+		<bndbox>
+			<xmin>391</xmin>
+			<ymin>405</ymin>
+			<xmax>908</xmax>
+			<ymax>958</ymax>
+		</bndbox>
+	</object>
+</annotation>

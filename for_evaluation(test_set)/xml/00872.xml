@@ -1,0 +1,26 @@
+<annotation>
+	<folder>kisung</folder>
+	<filename>00872.jpg</filename>
+	<path>/Users/nam/Downloads/consolidated_data_rename/kisung/00872.jpg</path>
+	<source>
+		<database>Unknown</database>
+	</source>
+	<size>
+		<width>1317</width>
+		<height>1507</height>
+		<depth>3</depth>
+	</size>
+	<segmented>0</segmented>
+	<object>
+		<name>mask</name>
+		<pose>Unspecified</pose>
+		<truncated>0</truncated>
+		<difficult>0</difficult>
+		<bndbox>
+			<xmin>442</xmin>
+			<ymin>324</ymin>
+			<xmax>874</xmax>
+			<ymax>832</ymax>
+		</bndbox>
+	</object>
+</annotation>

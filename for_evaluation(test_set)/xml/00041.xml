@@ -1,0 +1,26 @@
+<annotation>
+	<folder>w_mask</folder>
+	<filename>00041.jpg</filename>
+	<path>/home/ambientai/Downloads/consolidated_data_rename/w_mask/00041.jpg</path>
+	<source>
+		<database>Unknown</database>
+	</source>
+	<size>
+		<width>524</width>
+		<height>350</height>
+		<depth>3</depth>
+	</size>
+	<segmented>0</segmented>
+	<object>
+		<name>mask</name>
+		<pose>Unspecified</pose>
+		<truncated>0</truncated>
+		<difficult>0</difficult>
+		<bndbox>
+			<xmin>208</xmin>
+			<ymin>51</ymin>
+			<xmax>334</xmax>
+			<ymax>225</ymax>
+		</bndbox>
+	</object>
+</annotation>

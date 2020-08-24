@@ -1,0 +1,26 @@
+<annotation>
+	<folder>(unlabeled)wo_mask</folder>
+	<filename>10921.jpg</filename>
+	<path>/home/chai/Dropbox/codes/lab/faces_for_coral_summer_project/common/image/(unlabeled)wo_mask/10921.jpg</path>
+	<source>
+		<database>Unknown</database>
+	</source>
+	<size>
+		<width>600</width>
+		<height>800</height>
+		<depth>3</depth>
+	</size>
+	<segmented>0</segmented>
+	<object>
+		<name>nomask</name>
+		<pose>Unspecified</pose>
+		<truncated>0</truncated>
+		<difficult>0</difficult>
+		<bndbox>
+			<xmin>167</xmin>
+			<ymin>289</ymin>
+			<xmax>429</xmax>
+			<ymax>565</ymax>
+		</bndbox>
+	</object>
+</annotation>
