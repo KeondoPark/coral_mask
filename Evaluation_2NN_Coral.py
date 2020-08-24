@@ -76,8 +76,8 @@ def main():
     default_model_dir = './all_models'
     
     # Set face detection model
-    # default_model = 'mobilenet_ssd_v2_face_quant_postprocess_edgetpu.tflite' # Coral ver
-    default_model = 'mobilenet_ssd_v2_face_quant_postprocess.tflite' # GPU ver
+    default_model = 'mobilenet_ssd_v2_face_quant_postprocess_edgetpu.tflite' # Coral ver
+    # default_model = 'mobilenet_ssd_v2_face_quant_postprocess.tflite' # GPU ver
     default_labels = 'face_labels.txt'  
     
     parser = argparse.ArgumentParser()
@@ -85,8 +85,8 @@ def main():
                         default = default_model)                
     
     # Set mask classification model
-    default_model2 = 'mask_detector_quant.tflite' # GPU ver
-    #default_model2 = 'mask_detector_quant_edgetpu.tflite' #Coral ver
+    # default_model2 = 'mask_detector_quant.tflite' # GPU ver
+    default_model2 = 'mask_detector_quant_edgetpu.tflite' # Coral ver
     parser.add_argument('--model2', help='.tflite model path',
                         default=default_model2)
     
@@ -101,11 +101,11 @@ def main():
     args = parser.parse_args()
     
     # Load 1NN
-    interpreter = tflite.Interpreter(model_path = args.model)
+    interpreter = tflite.Interpreter(model_path = args.model, experimental_delegates=[tflite.load_delegate('libedgetpu.so.1')])
     interpreter.allocate_tensors()
     
     # Load 2NN
-    interpreter2 = tflite.Interpreter(model_path = args.model2)
+    interpreter2 = tflite.Interpreter(model_path = args.model2, experimental_delegates=[tflite.load_delegate('libedgetpu.so.1')])
     interpreter2.allocate_tensors()
 
     # Load labels
