@@ -133,6 +133,22 @@ bazel run -c opt tensorflow/lite/toco:toco -- \
 ```
 
 
+> see if it works
+```
+bazel run -c opt tensorflow/lite/toco:toco -- \
+--input_file=/Users/woolee/mldl_project/github/coral_mask/1NN/mask_model_export_tflite11/tflite_graph.pb \
+--output_file=/Users/woolee/mldl_project/github/coral_mask/1NN/quantized/one_nn11.tflite \
+--input_shapes=1,320,320,3 \
+--input_arrays=normalized_input_image_tensor \
+--output_arrays='TFLite_Detection_PostProcess','TFLite_Detection_PostProcess:1','TFLite_Detection_PostProcess:2','TFLite_Detection_PostProcess:3' \
+--inference_type=QUANTIZED_UINT8 \
+--mean_values=128 \
+--std_values=128 \
+--change_concat_input_ranges=false \
+--allow_custom_ops
+```
+
+
 1. Go to Directory that .tflite is in.  
 ```
 cd [your_dir_that_model_exists]
