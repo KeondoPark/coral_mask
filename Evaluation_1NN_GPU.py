@@ -75,7 +75,7 @@ def main():
     #efault_model_dir = './all_models'
     
     # Set model
-    # default_model = 'mobilenet_ssd_v2_face_quant_postprocess_edgetpu.tflite' # Coral ver
+    # default_model = './1NN/quantized/one_nn11_edgetpu.tflite' # Coral ver
     default_model = './1NN/quantized/one_nn11.tflite' # GPU ver
     default_labels = 'face_labels.txt' 
 
@@ -211,8 +211,8 @@ def main():
                 file.write("\n")
 
         window_name = 'image'
-        cv2.imshow(window_name, cv2_im)
-        cv2.waitKey()
+        # cv2.imshow(window_name, cv2_im)
+        # cv2.waitKey()
 
 if __name__ == '__main__':
     main()
