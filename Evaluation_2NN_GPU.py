@@ -17,6 +17,7 @@ import re
 import tflite_runtime.interpreter as tflite
 import xml.etree.ElementTree as ET
 import shutil
+import time
 
 shutil.rmtree("./mAP/input/ground-truth")
 shutil.rmtree("./mAP/input/detection-results")
@@ -120,6 +121,12 @@ def main():
         full_filename = os.path.join(test_dir, filename)
         full_filenames.append(full_filename)
     
+    total_facedetection_time = 0
+    face_detection_count = 0
+
+    total_maskdetection_time = 0
+    mask_detection_count = 0
+
     for filename in full_filenames:
         print(f'---------------------------', filename, '---------------------------')
         # get filenum
@@ -175,7 +182,14 @@ def main():
         pil_im = Image.fromarray(cv2_im_rgb)
 
         common.set_input(interpreter, pil_im)
+
+        # Latency calculation
+        detect_start_time = time.time()
         interpreter.invoke()
+        detect_end_time = time.time()
+        total_facedetection_time += detect_end_time - detect_start_time
+        face_detection_count += 1
+        
         objs = get_output(interpreter) #score_threshold=args.threshold, top_k=args.top_k)
         print('detection result:', objs)
         
@@ -196,7 +210,13 @@ def main():
             pil_im2 = Image.fromarray(cv2_im_rgb[ymin:ymax, xmin:xmax])            
             common.set_input2(interpreter2, pil_im2)
             output_data = common.output_tensor2(interpreter2)
+
+            # Latency calculation
+            mask_start_time = time.time()
             interpreter2.invoke()
+            mask_end_time = time.time()
+            total_maskdetection_time += mask_end_time - mask_start_time
+            mask_detection_count += 1
 
             # print(output_data)
             mask = output_data[0]
@@ -221,8 +241,14 @@ def main():
         window_name = 'Image'
         #cv2.imshow(window_name, cv2_im)
         #cv2.waitKey()
-        
+
         print('-------------------------------next file----------------------------------------------------------')
+
+    avg_face = total_facedetection_time/face_detection_count
+    avg_mask = total_maskdetection_time/mask_detection_count
+    print('Average Face Detection Time: ', avg_face)
+    print('Average Mask Detection Time: ', avg_mask)
+    print('Average Total Inference Time: ', avg_face + avg_mask)
 
 if __name__ == '__main__':
     main()

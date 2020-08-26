@@ -17,6 +17,7 @@ import re
 import tflite_runtime.interpreter as tflite
 import xml.etree.ElementTree as ET
 import shutil
+import time
 
 shutil.rmtree("./mAP/input/ground-truth")
 shutil.rmtree("./mAP/input/detection-results")
@@ -38,7 +39,7 @@ class BBox(collections.namedtuple('BBox', ['xmin', 'ymin', 'xmax', 'ymax'])):
     """
     __slots__ = ()
 
-def get_output(interpreter, score_threshold, top_k, image_scale=1.0):
+def get_output(interpreter, image_scale=1.0):
     """Returns list of detected objects."""
     boxes = common.output_tensor(interpreter, 0)
     class_ids = common.output_tensor(interpreter, 1)
@@ -55,7 +56,7 @@ def get_output(interpreter, score_threshold, top_k, image_scale=1.0):
                       xmax=np.minimum(1.0, xmax),
                       ymax=np.minimum(1.0, ymax)))
 
-    return [make(i) for i in range(top_k) if scores[i] >= score_threshold]
+    return [make(i) for i in range(len(scores)) if not np.isnan(class_ids[i])]#if scores[i] >= score_threshold]
 
 # 박스 친거만 이미지에서 크롭하기
 def append_objs_to_img(cv2_im, objs, labels):
@@ -86,10 +87,10 @@ def main():
     parser.add_argument('--labels', help='label file path',
                         default = default_labels)
 
-    parser.add_argument('--top_k', type=int, default=5,
-                        help='number of categories with highest score to display')
-    parser.add_argument('--threshold', type=float, default=0.1,
-                        help='classifier score threshold')
+    #parser.add_argument('--top_k', type=int, default=5,
+    #                    help='number of categories with highest score to display')
+    #parser.add_argument('--threshold', type=float, default=0.1,
+    #                    help='classifier score threshold')
     args = parser.parse_args()
 
     # Load 1NN
@@ -107,6 +108,9 @@ def main():
         full_filename = os.path.join(test_dir, filename)
         full_filenames.append(full_filename)
     
+    total_maskdetection_time = 0
+    mask_detection_count = 0
+
     for filename in full_filenames:
         print(f'---------------------------', filename, '---------------------------')
         # get filenum
@@ -149,13 +153,27 @@ def main():
         
         print('ground_truths: ', ground_truths)
 
+        for ground_truth in ground_truths:
+            with open("./mAP/input/ground-truth/{}.txt".format(filenum), "a+") as file:
+                file.write(str(ground_truth[0]) + ' ')
+                for item in ground_truth[1]:
+                    file.write("%s " % item)
+                file.write("\n")
+
         # Evaluation of object detection
         cv2_im_rgb = cv2.cvtColor(cv2_im, cv2.COLOR_BGR2RGB)
         pil_im = Image.fromarray(cv2_im_rgb)
 
         common.set_input(interpreter, pil_im)
+
+        # Latency calculation
+        mask_start_time = time.time()
         interpreter.invoke()
-        objs = get_output(interpreter, score_threshold=args.threshold, top_k=args.top_k)
+        mask_end_time = time.time()
+        total_maskdetection_time += mask_end_time - mask_start_time
+        mask_detection_count += 1
+        
+        objs = get_output(interpreter) # score_threshold=args.threshold, top_k=args.top_k)
         print('detection result:', objs)
 
         for i in range(len(objs)):
@@ -178,31 +196,8 @@ def main():
                 label = "mask"
             score = objs[i].score
             print(obj_bbox, label, score)
-            
-            dummy = 0
-            min_diff = 1000000
-            min_diff_index = 0
-            while dummy < len(ground_truths):
-                diff = 0
-                for j in range(len(obj_bbox)):
-                    minus = abs(obj_bbox[j] - ground_truths[dummy][1][j])
-                    diff = diff + minus
-                
-                if diff < min_diff:
-                    min_diff = diff
-                    min_diff_index = dummy
-
-                dummy += 1
-
-            final_truth = ground_truths[min_diff_index]
 
             # Write label percentage, ground truth bbox and obj detection bbox to .txt file
-            with open("./mAP/input/ground-truth/{}.txt".format(filenum), "a+") as file:
-                file.write(str(final_truth[0]) + ' ')
-                for item in final_truth[1]:
-                    file.write("%s " % item)
-                file.write("\n")
-
             with open("./mAP/input/detection-results/{}.txt".format(filenum), "a+") as file:
                 file.write(label + ' ')
                 file.write(str(score) + ' ')
@@ -213,6 +208,9 @@ def main():
         window_name = 'image'
         # cv2.imshow(window_name, cv2_im)
         # cv2.waitKey()
+
+    avg_mask = total_maskdetection_time/mask_detection_count
+    print('Average Total Inference Time: ', avg_mask)
 
 if __name__ == '__main__':
     main()
