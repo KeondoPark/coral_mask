@@ -98,7 +98,7 @@ def main():
     #                    help='number of categories with highest score to display')
     #parser.add_argument('--camera_idx', type=int, help='Index of which video source to use. ', default = 0)
     #parser.add_argument('--threshold', type=float, default=0.1,
-                        help='classifier score threshold')
+    #                    help='classifier score threshold')
     args = parser.parse_args()
     
     # Load 1NN
