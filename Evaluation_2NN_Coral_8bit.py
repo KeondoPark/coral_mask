@@ -163,7 +163,7 @@ def main():
             top_left, bottom_right = (xmin, ymax), (xmax, ymin)
             color = (0, 0, 255)
             thickness = 2
-            cv2.rectangle(cv2_im, top_left, bottom_right, color, thickness)
+            # cv2.rectangle(cv2_im, top_left, bottom_right, color, thickness)
             test_bbox = [bbox[0]/width, bbox[1]/height, bbox[2]/width, bbox[3]/height]
 
             ground_truths.append([test_label, test_bbox])
@@ -196,6 +196,8 @@ def main():
             if objs[i].id != 0:
                 continue
             if objs[i].score > 1:
+                continue
+            if any(edge > 1 for edge in obj_bbox):
                 continue
             obj_bbox = list(objs[i].bbox)
             xmin, ymin, xmax, ymax = obj_bbox

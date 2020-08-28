@@ -131,6 +131,7 @@ def main():
         print(f'---------------------------', filename, '---------------------------')
         # get filenum
         filenum = filename[-9:-4]
+        if filenum
         # filenum = filename.split('/')[2].split('.')[0]
 
         # set root from xml
@@ -163,7 +164,7 @@ def main():
             top_left, bottom_right = (xmin, ymax), (xmax, ymin)
             color = (0, 0, 255)
             thickness = 2
-            cv2.rectangle(cv2_im, top_left, bottom_right, color, thickness)
+            # cv2.rectangle(cv2_im, top_left, bottom_right, color, thickness)
             test_bbox = [bbox[0]/width, bbox[1]/height, bbox[2]/width, bbox[3]/height]
 
             ground_truths.append([test_label, test_bbox])
@@ -199,13 +200,15 @@ def main():
             if objs[i].score > 1:
                 continue
             obj_bbox = list(objs[i].bbox)
+            if any(edge > 1 for edge in obj_bbox):
+                continue
             xmin, ymin, xmax, ymax = obj_bbox
             xmin, ymin, xmax, ymax = int(xmin*width), int(ymin*height), int(xmax*width), int(ymax*height)
             print(xmin, ymin, xmax, ymax)
             top_left, bottom_right = (xmin, ymax), (xmax, ymin)
             color = (255, 0, 0)
             thickness = 2
-            cv2.rectangle(cv2_im, top_left, bottom_right, color, thickness)
+            # cv2.rectangle(cv2_im, top_left, bottom_right, color, thickness)
 
             pil_im2 = Image.fromarray(cv2_im_rgb[ymin:ymax, xmin:xmax])            
             common.set_input2(interpreter2, pil_im2)
