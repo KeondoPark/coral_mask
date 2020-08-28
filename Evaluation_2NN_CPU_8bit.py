@@ -131,7 +131,6 @@ def main():
         print(f'---------------------------', filename, '---------------------------')
         # get filenum
         filenum = filename[-9:-4]
-        if filenum
         # filenum = filename.split('/')[2].split('.')[0]
 
         # set root from xml
