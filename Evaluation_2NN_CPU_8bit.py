@@ -128,7 +128,7 @@ def main():
     mask_detection_count = 0
 
     for filename in full_filenames:
-        print(f'---------------------------', filename, '---------------------------')
+        #print(f'---------------------------', filename, '---------------------------')
         # get filenum
         filenum = filename[-9:-4]
         # filenum = filename.split('/')[2].split('.')[0]
@@ -161,14 +161,14 @@ def main():
                 bbox.append(int(element.text))
             xmin, ymin, xmax, ymax = bbox
             top_left, bottom_right = (xmin, ymax), (xmax, ymin)
-            color = (0, 0, 255)
-            thickness = 2
-            # cv2.rectangle(cv2_im, top_left, bottom_right, color, thickness)
+            #color = (0, 0, 255)
+            #thickness = 2
+            #cv2.rectangle(cv2_im, top_left, bottom_right, color, thickness)
             test_bbox = [bbox[0]/width, bbox[1]/height, bbox[2]/width, bbox[3]/height]
 
             ground_truths.append([test_label, test_bbox])
         
-        print('ground_truths: ', ground_truths)
+        #print('ground_truths: ', ground_truths)
         
         for ground_truth in ground_truths:
             with open("./mAP/groundtruths/{}.txt".format(filenum), "a+") as file:
@@ -191,7 +191,7 @@ def main():
         face_detection_count += 1
         
         objs = get_output(interpreter) #score_threshold=args.threshold, top_k=args.top_k)
-        print('detection result:', objs)
+        #print('detection result:', objs)
         
         for i in range(len(objs)):
             if objs[i].id != 0:
@@ -205,9 +205,9 @@ def main():
             xmin, ymin, xmax, ymax = int(xmin*width), int(ymin*height), int(xmax*width), int(ymax*height)
             print(xmin, ymin, xmax, ymax)
             top_left, bottom_right = (xmin, ymax), (xmax, ymin)
-            color = (255, 0, 0)
-            thickness = 2
-            # cv2.rectangle(cv2_im, top_left, bottom_right, color, thickness)
+            #color = (255, 0, 0)
+            #thickness = 2
+            #cv2.rectangle(cv2_im, top_left, bottom_right, color, thickness)
 
             pil_im2 = Image.fromarray(cv2_im_rgb[ymin:ymax, xmin:xmax])            
             common.set_input2(interpreter2, pil_im2)
@@ -231,7 +231,7 @@ def main():
             else:
                 label = "nomask"
                 score = withoutMask
-            print(obj_bbox, label, score)
+            #print(obj_bbox, label, score)
 
             with open("./mAP/2NN_CPU_8bit_detections/{}.txt".format(filenum), "a+") as file:
                 file.write(label + ' ')
@@ -240,11 +240,11 @@ def main():
                     file.write("%s " % item)
                 file.write("\n")
 
-        window_name = 'Image'
+        #window_name = 'Image'
         #cv2.imshow(window_name, cv2_im)
         #cv2.waitKey()
 
-        print('-------------------------------next file----------------------------------------------------------')
+        #print('-------------------------------next file----------------------------------------------------------')
 
     avg_face = total_facedetection_time/face_detection_count
     avg_mask = total_maskdetection_time/mask_detection_count

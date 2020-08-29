@@ -98,7 +98,7 @@ def main():
     #                    help='number of categories with highest score to display')
     #parser.add_argument('--camera_idx', type=int, help='Index of which video source to use. ', default = 0)
     #parser.add_argument('--threshold', type=float, default=0.1,
-                        help='classifier score threshold')
+    #                    help='classifier score threshold')
     args = parser.parse_args()
     
     # Load 1NN
@@ -169,6 +169,7 @@ def main():
             ground_truths.append([test_label, test_bbox])
         
         print('ground_truths: ', ground_truths)
+
         for ground_truth in ground_truths:
             with open("./mAP/groundtruths/{}.txt".format(filenum), "a+") as file:
                 file.write(str(ground_truth[0]) + ' ')
@@ -197,9 +198,9 @@ def main():
                 continue
             if objs[i].score > 1:
                 continue
+            obj_bbox = list(objs[i].bbox)
             if any(edge > 1 for edge in obj_bbox):
                 continue
-            obj_bbox = list(objs[i].bbox)
             xmin, ymin, xmax, ymax = obj_bbox
             xmin, ymin, xmax, ymax = int(xmin*width), int(ymin*height), int(xmax*width), int(ymax*height)
             print(xmin, ymin, xmax, ymax)
@@ -241,7 +242,7 @@ def main():
 
             # filenum = filenum + '1'
 
-        window_name = 'Image'
+        #window_name = 'Image'
         # cv2.imshow(window_name, cv2_im)
         # cv2.waitKey()
         
