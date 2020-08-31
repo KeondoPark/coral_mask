@@ -78,7 +78,7 @@ def main():
     
     # Set model
     # default_model = './1NN/quantized/one_nn11_edgetpu.tflite' # Coral ver
-    default_model = './1NN/quantized/one_nn11.tflite' # GPU ver
+    default_model = './1NN/quantized/one_nn11_2.tflite' # GPU ver
     default_labels = 'face_labels.txt' 
 
     parser = argparse.ArgumentParser()
@@ -129,7 +129,7 @@ def main():
         images.append(pil_im)
         
         # resize the input tensor
-        if index == 0:
+        if index == 7:
             new_images = np.array(images, dtype=np.uint8)
             print(new_images.shape)
             interpreter.resize_tensor_input(input_details[0]['index'],[len(images), 320, 320, 3])
