@@ -201,6 +201,8 @@ def main():
             obj_bbox = list(objs[i].bbox)
             if any(edge > 1 for edge in obj_bbox):
                 continue
+            if any(edge == 0.0 for edge in obj_bbox):
+                continue
             xmin, ymin, xmax, ymax = obj_bbox
             xmin, ymin, xmax, ymax = int(xmin*width), int(ymin*height), int(xmax*width), int(ymax*height)
             print(xmin, ymin, xmax, ymax)
