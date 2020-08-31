@@ -18,6 +18,7 @@ import tflite_runtime.interpreter as tflite
 import xml.etree.ElementTree as ET
 import shutil
 import time
+import pathlib
 
 shutil.rmtree("./mAP/groundtruths")
 shutil.rmtree("./mAP/1NN_CPU_8bit_detections")
@@ -98,15 +99,6 @@ def main():
     input_details = interpreter.get_input_details()
     output_details = interpreter.get_output_details()
 
-    print("== Input details ==")
-    print(input_details)
-    print("shape:", input_details[0]['shape'])
-    print("type:", input_details[0]['dtype'])
-    print("\n== Output details ==")
-    print(output_details)
-    print("shape:", output_details[0]['shape'])
-    print("type:", output_details[0]['dtype'])
-
     interpreter.allocate_tensors()
 
     # Load labels
@@ -123,107 +115,36 @@ def main():
     total_maskdetection_time = 0
     mask_detection_count = 0
 
-    for filename in full_filenames:
-        print(f'---------------------------', filename, '---------------------------')
-        # get filenum
-        filenum = filename[-9:-4]
-        # filenum = filename.split('/')[2].split('.')[0]
+    images = []
 
-        # set root from xml
-        tree = ET.parse(filename)
-        root = tree.getroot()
-
-        # find img directory
-        image_filename = root.find('filename').text
-        image_path = os.path.join(test_img_dir, image_filename)
-
-        # Load Image, get height and width
-        cv2_im = cv2.imread(image_path,1)
-        height, width, channels = cv2_im.shape
-
-        # Get ground truths
-        all = root.findall('object')
-        ground_truths  = []
-        for object in all:
-            # get name, bndbox for labels and bbox
-            name = object.find('name')
-            bndbox = object.find('bndbox')
-
-            # set test label to name.text (mask or nomask)
-            test_label = name.text
-            bbox = []
-            for element in bndbox:
-                bbox.append(int(element.text))
-            xmin, ymin, xmax, ymax = bbox
-            top_left, bottom_right = (xmin, ymax), (xmax, ymin)
-            color = (0, 0, 255)
-            thickness = 2
-            cv2.rectangle(cv2_im, top_left, bottom_right, color, thickness)
-            test_bbox = [bbox[0]/width, bbox[1]/height, bbox[2]/width, bbox[3]/height]
-
-            ground_truths.append([test_label, test_bbox])
+    for index, file in enumerate(pathlib.Path('for_evaluation(test_set)/image').iterdir()):
         
-        #print('ground_truths: ', ground_truths)
+        # read and resize the image
+        cv2_im = cv2.imread(r"{}".format(file.resolve()))
+        #cv2_im_rgb = cv2.cvtColor(cv2_im, cv2.COLOR_BGR2RGB)
+        #pil_im = Image.fromarray(cv2_im_rgb)
 
-        for ground_truth in ground_truths:
-            with open("./mAP/groundtruths/{}.txt".format(filenum), "a+") as file:
-                file.write(str(ground_truth[0]) + ' ')
-                for item in ground_truth[1]:
-                    file.write("%s " % item)
-                file.write("\n")
-
-        # Evaluation of object detection
-        cv2_im_rgb = cv2.cvtColor(cv2_im, cv2.COLOR_BGR2RGB)
-        pil_im = Image.fromarray(cv2_im_rgb)
-
-        common.set_input(interpreter, pil_im)
-
-        # Latency calculation
-        mask_start_time = time.time()
-        interpreter.invoke()
-        mask_end_time = time.time()
-        total_maskdetection_time += mask_end_time - mask_start_time
-        mask_detection_count += 1
+        pil_im = cv2.resize(cv2_im, (320, 320))
         
-        objs = get_output(interpreter) # score_threshold=args.threshold, top_k=args.top_k)
-        #print('detection result:', objs)
-
-        for i in range(len(objs)):
-            if objs[i].id != 0 and objs[i].id != 1:
-                continue
-            if objs[i].score > 1:
-                continue
-            obj_bbox = list(objs[i].bbox)
-            if any(edge > 1 for edge in obj_bbox):
-                continue
-            xmin, ymin, xmax, ymax = obj_bbox
-            xmin, ymin, xmax, ymax = int(xmin*width), int(ymin*height), int(xmax*width), int(ymax*height)
-            #print(xmin, ymin, xmax, ymax)
-            top_left, bottom_right = (xmin, ymax), (xmax, ymin)
-            color = (255, 0, 0)
-            thickness = 2
-            cv2.rectangle(cv2_im, top_left, bottom_right, color, thickness)
-
-            if objs[i].id == 0:
-                label = "nomask"
-            elif objs[i].id == 1:
-                label = "mask"
-            score = objs[i].score
-            #print(obj_bbox, label, score)
-
-            with open("./mAP/1NN_CPU_8bit_detections/{}.txt".format(filenum), "a+") as file:
-                file.write(label + ' ')
-                file.write(str(score) + ' ')
-                for item in obj_bbox:
-                    file.write("%s " % item)
-                file.write("\n")
-
-        window_name = 'image'
-        cv2.imshow(window_name, cv2_im)
-        cv2.waitKey()
-
-    avg_mask = total_maskdetection_time/mask_detection_count
-    print('Average Total Inference Time: ', avg_mask)
+        images.append(pil_im)
+        
+        # resize the input tensor
+        if index == 0:
+            new_images = np.array(images, dtype=np.uint8)
+            print(new_images.shape)
+            interpreter.resize_tensor_input(input_details[0]['index'],[len(images), 320, 320, 3])
+            print(interpreter.get_input_details())
+            interpreter.resize_tensor_input(output_details[0]['index'], [len(images), 1])
+            print(interpreter.get_output_details())
+            interpreter.allocate_tensors()
+            #common.set_input(interpreter, images)
+            interpreter.set_tensor(input_details[0]['index'], images)
+            # run the inference
+            interpreter.invoke()
+            # output_details[0]['index'] = the index which provides the input
+            output_data = interpreter.get_tensor(output_details[0]['index'])
+            # clear the list
+            images.clear()
 
 if __name__ == '__main__':
     main()
