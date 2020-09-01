@@ -112,8 +112,8 @@ def main():
     # Load labels
     labels = load_labels(args.labels)
     # Load Test Data - ground truth, image
-    test_dir = 'for_evaluation(test_set)/test_xml'
-    test_img_dir = 'for_evaluation(test_set)/test_image'
+    test_dir = 'for_evaluation(test_set)/xml'
+    test_img_dir = 'for_evaluation(test_set)/image'
     filenames = os.listdir(test_dir)
     full_filenames = []
     for filename in filenames:
@@ -220,8 +220,8 @@ def main():
                 file.write("\n")
 
         window_name = 'image'
-        cv2.imshow(window_name, cv2_im)
-        cv2.waitKey()
+        #cv2.imshow(window_name, cv2_im)
+        #cv2.waitKey()
 
     avg_mask = total_maskdetection_time/mask_detection_count
     print('Average Total Inference Time: ', avg_mask)
