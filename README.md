@@ -176,7 +176,7 @@ below successful - this produced one_nn11_2.tflite
 ```
 bazel run -c opt tensorflow/lite/toco:toco -- \
 --input_file=/Users/woolee/mldl_project/github/coral_mask/1NN/mask_model_export_tflite11/tflite_graph.pb \
---output_file=/Users/woolee/mldl_project/github/coral_mask/1NN/quantized/one_nn11_2.tflite \
+--output_file=/Users/woolee/mldl_project/github/coral_mask/1NN/quantized/one_nn11_2_.tflite \
 --input_shapes=8,320,320,3 \
 --input_arrays=normalized_input_image_tensor \
 --output_arrays='TFLite_Detection_PostProcess','TFLite_Detection_PostProcess:1','TFLite_Detection_PostProcess:2','TFLite_Detection_PostProcess:3' \
@@ -198,7 +198,7 @@ below successful - this produced one_nn11_3.tflite ('allow_custom_ops' discarded
 ```
 bazel run -c opt tensorflow/lite/toco:toco -- \
 --input_file=/Users/woolee/mldl_project/github/coral_mask/1NN/mask_model_export_tflite11/tflite_graph.pb \
---output_file=/Users/woolee/mldl_project/github/coral_mask/1NN/quantized/one_nn11_3.tflite \
+--output_file=/Users/woolee/mldl_project/github/coral_mask/1NN/quantized/one_nn11_3_.tflite \
 --input_shapes=8,320,320,3 \
 --input_arrays=normalized_input_image_tensor \
 --output_arrays='TFLite_Detection_PostProcess','TFLite_Detection_PostProcess:1','TFLite_Detection_PostProcess:2','TFLite_Detection_PostProcess:3' \
@@ -218,7 +218,7 @@ below successful - this produced one_nn11_4.tflite ('allow_custom_ops' kept, 'ch
 ```
 bazel run -c opt tensorflow/lite/toco:toco -- \
 --input_file=/Users/woolee/mldl_project/github/coral_mask/1NN/mask_model_export_tflite11/tflite_graph.pb \
---output_file=/Users/woolee/mldl_project/github/coral_mask/1NN/quantized/one_nn11_4.tflite \
+--output_file=/Users/woolee/mldl_project/github/coral_mask/1NN/quantized/one_nn11_4_.tflite \
 --input_shapes=8,320,320,3 \
 --input_arrays=normalized_input_image_tensor \
 --output_arrays='TFLite_Detection_PostProcess','TFLite_Detection_PostProcess:1','TFLite_Detection_PostProcess:2','TFLite_Detection_PostProcess:3' \
