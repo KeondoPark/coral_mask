@@ -95,13 +95,25 @@ def main():
 
     # Load 1NN
     interpreter = tflite.Interpreter(model_path = args.model)
+    input_details = interpreter.get_input_details()
+    output_details = interpreter.get_output_details()
+
+    print("== Input details ==")
+    print(input_details)
+    print("shape:", input_details[0]['shape'])
+    print("type:", input_details[0]['dtype'])
+    print("\n== Output details ==")
+    print(output_details)
+    print("shape:", output_details[0]['shape'])
+    print("type:", output_details[0]['dtype'])
+
     interpreter.allocate_tensors()
 
     # Load labels
     labels = load_labels(args.labels)
     # Load Test Data - ground truth, image
-    test_dir = 'for_evaluation(test_set)/xml'
-    test_img_dir = 'for_evaluation(test_set)/image'
+    test_dir = 'for_evaluation(test_set)/test_xml'
+    test_img_dir = 'for_evaluation(test_set)/test_image'
     filenames = os.listdir(test_dir)
     full_filenames = []
     for filename in filenames:
@@ -146,12 +158,12 @@ def main():
             top_left, bottom_right = (xmin, ymax), (xmax, ymin)
             color = (0, 0, 255)
             thickness = 2
-            #cv2.rectangle(cv2_im, top_left, bottom_right, color, thickness)
+            cv2.rectangle(cv2_im, top_left, bottom_right, color, thickness)
             test_bbox = [bbox[0]/width, bbox[1]/height, bbox[2]/width, bbox[3]/height]
 
             ground_truths.append([test_label, test_bbox])
         
-        print('ground_truths: ', ground_truths)
+        #print('ground_truths: ', ground_truths)
 
         for ground_truth in ground_truths:
             with open("./mAP/groundtruths/{}.txt".format(filenum), "a+") as file:
@@ -174,7 +186,7 @@ def main():
         mask_detection_count += 1
         
         objs = get_output(interpreter) # score_threshold=args.threshold, top_k=args.top_k)
-        print('detection result:', objs)
+        #print('detection result:', objs)
 
         for i in range(len(objs)):
             if objs[i].id != 0 and objs[i].id != 1:
@@ -186,29 +198,30 @@ def main():
                 continue
             xmin, ymin, xmax, ymax = obj_bbox
             xmin, ymin, xmax, ymax = int(xmin*width), int(ymin*height), int(xmax*width), int(ymax*height)
-            print(xmin, ymin, xmax, ymax)
+            unnorm = [xmin, ymin, xmax, ymax]
+            #print(xmin, ymin, xmax, ymax)
             top_left, bottom_right = (xmin, ymax), (xmax, ymin)
             color = (255, 0, 0)
             thickness = 2
-            #cv2.rectangle(cv2_im, top_left, bottom_right, color, thickness)
+            cv2.rectangle(cv2_im, top_left, bottom_right, color, thickness)
 
             if objs[i].id == 0:
                 label = "nomask"
             elif objs[i].id == 1:
                 label = "mask"
             score = objs[i].score
-            print(obj_bbox, label, score)
+            #print(obj_bbox, label, score)
 
             with open("./mAP/1NN_CPU_8bit_detections/{}.txt".format(filenum), "a+") as file:
                 file.write(label + ' ')
                 file.write(str(score) + ' ')
-                for item in obj_bbox:
+                for item in unnorm:
                     file.write("%s " % item)
                 file.write("\n")
 
         window_name = 'image'
-        # cv2.imshow(window_name, cv2_im)
-        # cv2.waitKey()
+        cv2.imshow(window_name, cv2_im)
+        cv2.waitKey()
 
     avg_mask = total_maskdetection_time/mask_detection_count
     print('Average Total Inference Time: ', avg_mask)

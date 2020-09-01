@@ -205,6 +205,7 @@ def main():
                 continue
             xmin, ymin, xmax, ymax = obj_bbox
             xmin, ymin, xmax, ymax = int(xmin*width), int(ymin*height), int(xmax*width), int(ymax*height)
+            unnorm = [xmin, ymin, xmax, ymax]
             print(xmin, ymin, xmax, ymax)
             top_left, bottom_right = (xmin, ymax), (xmax, ymin)
             color = (255, 0, 0)
@@ -238,7 +239,7 @@ def main():
             with open("./mAP/2NN_Coral_8bit_detections/{}.txt".format(filenum), "a+") as file:
                 file.write(label + ' ')
                 file.write(str(score) + ' ')
-                for item in obj_bbox:
+                for item in unnorm:
                     file.write("%s " % item)
                 file.write("\n")
 
