@@ -187,6 +187,13 @@ bazel run -c opt tensorflow/lite/toco:toco -- \
 --allow_custom_ops
 ```
 
+compile success, error message, though
+```
+2020-09-01 22:16:24.135063: I tensorflow/lite/toco/import_tensorflow.cc:663] Converting unsupported operation: TFLite_Detection_PostProcess
+2020-09-01 22:16:24.151858: F tensorflow/lite/toco/tooling_util.cc:1675] Check failed: input_array_dims[i] == input_array_proto.shape().dims(i) (1 vs. 8)
+```
+
+
 below successful - this produced one_nn11_3.tflite ('allow_custom_ops' discarded)
 ```
 bazel run -c opt tensorflow/lite/toco:toco -- \
@@ -199,6 +206,12 @@ bazel run -c opt tensorflow/lite/toco:toco -- \
 --mean_values=128 \
 --std_values=128 \
 --change_concat_input_ranges=false
+```
+
+compile success, error message, though
+```
+2020-09-01 22:16:24.135063: I tensorflow/lite/toco/import_tensorflow.cc:663] Converting unsupported operation: TFLite_Detection_PostProcess
+2020-09-01 22:16:24.151858: F tensorflow/lite/toco/tooling_util.cc:1675] Check failed: input_array_dims[i] == input_array_proto.shape().dims(i) (1 vs. 8)
 ```
 
 below successful - this produced one_nn11_4.tflite ('allow_custom_ops' kept, 'change_concat_input_ranges'='true')
@@ -214,6 +227,12 @@ bazel run -c opt tensorflow/lite/toco:toco -- \
 --std_values=128 \
 --change_concat_input_ranges=true \
 --allow_custom_ops
+```
+
+compile success, error message, though
+```
+2020-09-01 22:16:24.135063: I tensorflow/lite/toco/import_tensorflow.cc:663] Converting unsupported operation: TFLite_Detection_PostProcess
+2020-09-01 22:16:24.151858: F tensorflow/lite/toco/tooling_util.cc:1675] Check failed: input_array_dims[i] == input_array_proto.shape().dims(i) (1 vs. 8)
 ```
 
 
