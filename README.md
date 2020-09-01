@@ -121,19 +121,9 @@ You got to have .tflite file to quantize and the environment of Jupyter Terminal
 
 ## Bazel
 
-```
-bazel run -c opt tensorflow/lite/toco:toco -- \
---input_file=/Users/woolee/mldl_project/github/coral_mask/1NN/mask_model_export_tflite9/tflite_graph.pb \
---output_file=/Users/woolee/mldl_project/github/coral_mask/1NN/quantized/one_nn9.tflite \
---input_shapes=1,320,320,3 \
---input_arrays=normalized_input_image_tensor \
---output_arrays='TFLite_Detection_PostProcess','TFLite_Detection_PostProcess:1','TFLite_Detection_PostProcess:2','TFLite_Detection_PostProcess:3'  \
---inference_type=QUANTIZED_UINT8 \
---allow_custom_ops \ 
-```
 
 
-> see if it works
+> one_nn11.tflite
 ```
 bazel run -c opt tensorflow/lite/toco:toco -- \
 --input_file=/Users/woolee/mldl_project/github/coral_mask/1NN/mask_model_export_tflite11/tflite_graph.pb \
@@ -235,6 +225,41 @@ compile success, error message, though
 2020-09-01 22:16:24.151858: F tensorflow/lite/toco/tooling_util.cc:1675] Check failed: input_array_dims[i] == input_array_proto.shape().dims(i) (1 vs. 8)
 ```
 
+
+
+> one_nn_batch_8.tflite
+```
+bazel run -c opt tensorflow/lite/toco:toco -- \
+--input_file=/Users/woolee/mldl_project/github/coral_mask/1NN/mask_model_export_quant_batch8/tflite_graph.pb \
+--output_file=/Users/woolee/mldl_project/github/coral_mask/1NN/quantized/one_nn_batch_8.tflite \
+--input_shapes=8,320,320,3 \
+--input_arrays=normalized_input_image_tensor \
+--output_arrays='TFLite_Detection_PostProcess','TFLite_Detection_PostProcess:1','TFLite_Detection_PostProcess:2','TFLite_Detection_PostProcess:3' \
+--inference_type=QUANTIZED_UINT8 \
+--mean_values=128 \
+--std_values=128 \
+--change_concat_input_ranges=false \
+--allow_custom_ops
+
+```
+
+
+
+> one_nn_det_100.tflite
+```
+bazel run -c opt tensorflow/lite/toco:toco -- \
+--input_file=/Users/woolee/mldl_project/github/coral_mask/1NN/mask_model_export_quant_det100/tflite_graph.pb \
+--output_file=/Users/woolee/mldl_project/github/coral_mask/1NN/quantized/one_nn_det_100.tflite \
+--input_shapes=1,320,320,3 \
+--input_arrays=normalized_input_image_tensor \
+--output_arrays='TFLite_Detection_PostProcess','TFLite_Detection_PostProcess:1','TFLite_Detection_PostProcess:2','TFLite_Detection_PostProcess:3' \
+--inference_type=QUANTIZED_UINT8 \
+--mean_values=128 \
+--std_values=128 \
+--change_concat_input_ranges=false \
+--allow_custom_ops
+
+```
 
 1. Go to Directory that .tflite is in.  
 ```
