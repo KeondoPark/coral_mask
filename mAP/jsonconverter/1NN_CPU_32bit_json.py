@@ -16,8 +16,8 @@ for file in files:
         else:
             data["category_id"] = 1
         # bbox width, height adjust
-        data["bbox"] = [float(ls[2]), float(ls[3]), float(ls[4]) - float(ls[2]), float(ls[5]) - float(ls[3])]
-        data["score"] = ls[1]
+        data["bbox"] = [int(float(ls[2])), int(float(ls[3])), int(float(ls[4]) - float(ls[2])), int(float(ls[5]) - float(ls[3]))]
+        data["score"] = float(ls[1])
         res.append(data)
 
 with open('1NN_CPU_32bit_res.txt', 'w') as outfile:
