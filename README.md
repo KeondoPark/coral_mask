@@ -291,8 +291,6 @@ bazel run -c opt tensorflow/lite/toco:toco -- \
 --allow_custom_ops
 ```
 
-
-
 1. Go to Directory that .tflite is in.  
 ```
 cd [your_dir_that_model_exists]
