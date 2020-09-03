@@ -77,7 +77,7 @@ def main():
     
     # Set model
     # default_model = './1NN/quantized/one_nn11_edgetpu.tflite' # Coral ver
-    default_model = './1NN/quantized/one_nn11.tflite' # GPU ver
+    default_model = './1NN/quantized/one_nn_det_100_3.tflite' # GPU ver
     default_labels = 'face_labels.txt' 
 
     parser = argparse.ArgumentParser()
@@ -186,24 +186,27 @@ def main():
         mask_detection_count += 1
         
         objs = get_output(interpreter) # score_threshold=args.threshold, top_k=args.top_k)
-        #print('detection result:', objs)
+        print('detection result 갯수:', len(objs))
 
         for i in range(len(objs)):
-            if objs[i].id != 0 and objs[i].id != 1:
-                continue
-            if objs[i].score > 1:
-                continue
+            #if objs[i].id != 0 and objs[i].id != 1:
+            #    continue
+            #if objs[i].score > 1:
+            #    continue
             obj_bbox = list(objs[i].bbox)
-            if any(edge > 1 for edge in obj_bbox):
+            #if any(edge > 1 for edge in obj_bbox):
+            #    continue
+            if any(np.isnan(edge) for edge in obj_bbox):
                 continue
             xmin, ymin, xmax, ymax = obj_bbox
+            print(obj_bbox)
             xmin, ymin, xmax, ymax = int(xmin*width), int(ymin*height), int(xmax*width), int(ymax*height)
             unnorm = [xmin, ymin, xmax, ymax]
             #print(xmin, ymin, xmax, ymax)
             top_left, bottom_right = (xmin, ymax), (xmax, ymin)
             color = (255, 0, 0)
             thickness = 2
-            cv2.rectangle(cv2_im, top_left, bottom_right, color, thickness)
+            #cv2.rectangle(cv2_im, top_left, bottom_right, color, thickness)
 
             if objs[i].id == 0:
                 label = "nomask"
