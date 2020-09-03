@@ -1,0 +1,3 @@
+[submodule "mAP/cocoapi_mask"]
+	path = mAP/cocoapi_mask
+	url = https://github.com/KeondoPark/coral_mask/mAP/cocoapi_mask
