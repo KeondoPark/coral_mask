@@ -121,19 +121,9 @@ You got to have .tflite file to quantize and the environment of Jupyter Terminal
 
 ## Bazel
 
-```
-bazel run -c opt tensorflow/lite/toco:toco -- \
---input_file=/Users/woolee/mldl_project/github/coral_mask/1NN/mask_model_export_tflite9/tflite_graph.pb \
---output_file=/Users/woolee/mldl_project/github/coral_mask/1NN/quantized/one_nn9.tflite \
---input_shapes=1,320,320,3 \
---input_arrays=normalized_input_image_tensor \
---output_arrays='TFLite_Detection_PostProcess','TFLite_Detection_PostProcess:1','TFLite_Detection_PostProcess:2','TFLite_Detection_PostProcess:3'  \
---inference_type=QUANTIZED_UINT8 \
---allow_custom_ops \ 
-```
 
 
-> see if it works
+> one_nn11.tflite
 ```
 bazel run -c opt tensorflow/lite/toco:toco -- \
 --input_file=/Users/woolee/mldl_project/github/coral_mask/1NN/mask_model_export_tflite11/tflite_graph.pb \
@@ -176,7 +166,7 @@ below successful - this produced one_nn11_2.tflite
 ```
 bazel run -c opt tensorflow/lite/toco:toco -- \
 --input_file=/Users/woolee/mldl_project/github/coral_mask/1NN/mask_model_export_tflite11/tflite_graph.pb \
---output_file=/Users/woolee/mldl_project/github/coral_mask/1NN/quantized/one_nn11_2.tflite \
+--output_file=/Users/woolee/mldl_project/github/coral_mask/1NN/quantized/one_nn11_2_.tflite \
 --input_shapes=8,320,320,3 \
 --input_arrays=normalized_input_image_tensor \
 --output_arrays='TFLite_Detection_PostProcess','TFLite_Detection_PostProcess:1','TFLite_Detection_PostProcess:2','TFLite_Detection_PostProcess:3' \
@@ -187,11 +177,18 @@ bazel run -c opt tensorflow/lite/toco:toco -- \
 --allow_custom_ops
 ```
 
+compile success, error message, though
+```
+2020-09-01 22:16:24.135063: I tensorflow/lite/toco/import_tensorflow.cc:663] Converting unsupported operation: TFLite_Detection_PostProcess
+2020-09-01 22:16:24.151858: F tensorflow/lite/toco/tooling_util.cc:1675] Check failed: input_array_dims[i] == input_array_proto.shape().dims(i) (1 vs. 8)
+```
+
+
 below successful - this produced one_nn11_3.tflite ('allow_custom_ops' discarded)
 ```
 bazel run -c opt tensorflow/lite/toco:toco -- \
 --input_file=/Users/woolee/mldl_project/github/coral_mask/1NN/mask_model_export_tflite11/tflite_graph.pb \
---output_file=/Users/woolee/mldl_project/github/coral_mask/1NN/quantized/one_nn11_3.tflite \
+--output_file=/Users/woolee/mldl_project/github/coral_mask/1NN/quantized/one_nn11_3_.tflite \
 --input_shapes=8,320,320,3 \
 --input_arrays=normalized_input_image_tensor \
 --output_arrays='TFLite_Detection_PostProcess','TFLite_Detection_PostProcess:1','TFLite_Detection_PostProcess:2','TFLite_Detection_PostProcess:3' \
@@ -201,11 +198,17 @@ bazel run -c opt tensorflow/lite/toco:toco -- \
 --change_concat_input_ranges=false
 ```
 
+compile success, error message, though
+```
+2020-09-01 22:16:24.135063: I tensorflow/lite/toco/import_tensorflow.cc:663] Converting unsupported operation: TFLite_Detection_PostProcess
+2020-09-01 22:16:24.151858: F tensorflow/lite/toco/tooling_util.cc:1675] Check failed: input_array_dims[i] == input_array_proto.shape().dims(i) (1 vs. 8)
+```
+
 below successful - this produced one_nn11_4.tflite ('allow_custom_ops' kept, 'change_concat_input_ranges'='true')
 ```
 bazel run -c opt tensorflow/lite/toco:toco -- \
 --input_file=/Users/woolee/mldl_project/github/coral_mask/1NN/mask_model_export_tflite11/tflite_graph.pb \
---output_file=/Users/woolee/mldl_project/github/coral_mask/1NN/quantized/one_nn11_4.tflite \
+--output_file=/Users/woolee/mldl_project/github/coral_mask/1NN/quantized/one_nn11_4_.tflite \
 --input_shapes=8,320,320,3 \
 --input_arrays=normalized_input_image_tensor \
 --output_arrays='TFLite_Detection_PostProcess','TFLite_Detection_PostProcess:1','TFLite_Detection_PostProcess:2','TFLite_Detection_PostProcess:3' \
@@ -216,6 +219,77 @@ bazel run -c opt tensorflow/lite/toco:toco -- \
 --allow_custom_ops
 ```
 
+compile success, error message, though
+```
+2020-09-01 22:16:24.135063: I tensorflow/lite/toco/import_tensorflow.cc:663] Converting unsupported operation: TFLite_Detection_PostProcess
+2020-09-01 22:16:24.151858: F tensorflow/lite/toco/tooling_util.cc:1675] Check failed: input_array_dims[i] == input_array_proto.shape().dims(i) (1 vs. 8)
+```
+
+
+
+> one_nn_batch_8.tflite
+```
+bazel run -c opt tensorflow/lite/toco:toco -- \
+--input_file=/Users/woolee/mldl_project/github/coral_mask/1NN/mask_model_export_quant_batch8/tflite_graph.pb \
+--output_file=/Users/woolee/mldl_project/github/coral_mask/1NN/quantized/one_nn_batch_8.tflite \
+--input_shapes=8,320,320,3 \
+--input_arrays=normalized_input_image_tensor \
+--output_arrays='TFLite_Detection_PostProcess','TFLite_Detection_PostProcess:1','TFLite_Detection_PostProcess:2','TFLite_Detection_PostProcess:3' \
+--inference_type=QUANTIZED_UINT8 \
+--mean_values=128 \
+--std_values=128 \
+--change_concat_input_ranges=false \
+--allow_custom_ops
+
+```
+
+
+
+> one_nn_det_100.tflite
+```
+bazel run -c opt tensorflow/lite/toco:toco -- \
+--input_file=/Users/woolee/mldl_project/github/coral_mask/1NN/mask_model_export_quant_det100/tflite_graph.pb \
+--output_file=/Users/woolee/mldl_project/github/coral_mask/1NN/quantized/one_nn_det_100.tflite \
+--input_shapes=1,320,320,3 \
+--input_arrays=normalized_input_image_tensor \
+--output_arrays='TFLite_Detection_PostProcess','TFLite_Detection_PostProcess:1','TFLite_Detection_PostProcess:2','TFLite_Detection_PostProcess:3' \
+--inference_type=QUANTIZED_UINT8 \
+--mean_values=128 \
+--std_values=128 \
+--change_concat_input_ranges=false \
+--allow_custom_ops
+
+```
+
+> one_nn_det_100_2.tflite
+```
+bazel run -c opt tensorflow/lite/toco:toco -- \
+--input_file=/Users/woolee/mldl_project/github/coral_mask/1NN/mask_model_export_quant_det100_2/tflite_graph.pb \
+--output_file=/Users/woolee/mldl_project/github/coral_mask/1NN/quantized/one_nn_det_100_2.tflite \
+--input_shapes=1,320,320,3 \
+--input_arrays=normalized_input_image_tensor \
+--output_arrays='TFLite_Detection_PostProcess','TFLite_Detection_PostProcess:1','TFLite_Detection_PostProcess:2','TFLite_Detection_PostProcess:3' \
+--inference_type=QUANTIZED_UINT8 \
+--mean_values=128 \
+--std_values=128 \
+--change_concat_input_ranges=false \
+--allow_custom_ops
+```
+
+> one_nn_det_100_3.tflite
+```
+bazel run -c opt tensorflow/lite/toco:toco -- \
+--input_file=/Users/woolee/mldl_project/github/coral_mask/1NN/mask_model_export_quant_det100_3/tflite_graph.pb \
+--output_file=/Users/woolee/mldl_project/github/coral_mask/1NN/quantized/one_nn_det_100_2.tflite \
+--input_shapes=1,320,320,3 \
+--input_arrays=normalized_input_image_tensor \
+--output_arrays='TFLite_Detection_PostProcess','TFLite_Detection_PostProcess:1','TFLite_Detection_PostProcess:2','TFLite_Detection_PostProcess:3' \
+--inference_type=QUANTIZED_UINT8 \
+--mean_values=128 \
+--std_values=128 \
+--change_concat_input_ranges=false \
+--allow_custom_ops
+```
 
 1. Go to Directory that .tflite is in.  
 ```
