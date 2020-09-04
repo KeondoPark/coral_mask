@@ -45,6 +45,7 @@ def get_output(interpreter, image_scale=1.0):
     class_ids = common.output_tensor(interpreter, 1)
     scores = common.output_tensor(interpreter, 2)
     count = int(common.output_tensor(interpreter, 3))
+    print(count)
 
     def make(i):
         ymin, xmin, ymax, xmax = boxes[i]
@@ -56,7 +57,7 @@ def get_output(interpreter, image_scale=1.0):
                       xmax=np.minimum(1.0, xmax),
                       ymax=np.minimum(1.0, ymax)))
 
-    return [make(i) for i in range(len(scores)) if not np.isnan(class_ids[i])]#if scores[i] >= score_threshold]
+    return [make(i) for i in range(len(scores)) if not np.isnan(class_ids[i])], count #if scores[i] >= score_threshold]
 
 # 박스 친거만 이미지에서 크롭하기
 def append_objs_to_img(cv2_im, objs, labels):
@@ -97,15 +98,6 @@ def main():
     interpreter = tflite.Interpreter(model_path = args.model)
     input_details = interpreter.get_input_details()
     output_details = interpreter.get_output_details()
-
-    print("== Input details ==")
-    print(input_details)
-    print("shape:", input_details[0]['shape'])
-    print("type:", input_details[0]['dtype'])
-    print("\n== Output details ==")
-    print(output_details)
-    print("shape:", output_details[0]['shape'])
-    print("type:", output_details[0]['dtype'])
 
     interpreter.allocate_tensors()
 
@@ -185,10 +177,11 @@ def main():
         total_maskdetection_time += mask_end_time - mask_start_time
         mask_detection_count += 1
         
-        objs = get_output(interpreter) # score_threshold=args.threshold, top_k=args.top_k)
-        print('detection result 갯수:', len(objs))
+        objs, count = get_output(interpreter) # score_threshold=args.threshold, top_k=args.top_k)
+        print('detection result 갯수:', len(objs), 'count: ', count)
+        print(objs)
 
-        for i in range(len(objs)):
+        for i in range(count):
             #if objs[i].id != 0 and objs[i].id != 1:
             #    continue
             #if objs[i].score > 1:
@@ -196,10 +189,9 @@ def main():
             obj_bbox = list(objs[i].bbox)
             #if any(edge > 1 for edge in obj_bbox):
             #    continue
-            if any(np.isnan(edge) for edge in obj_bbox):
-                continue
+            #if any(np.isnan(edge) for edge in obj_bbox):
+            #    continue
             xmin, ymin, xmax, ymax = obj_bbox
-            print(obj_bbox)
             xmin, ymin, xmax, ymax = int(xmin*width), int(ymin*height), int(xmax*width), int(ymax*height)
             unnorm = [xmin, ymin, xmax, ymax]
             #print(xmin, ymin, xmax, ymax)
