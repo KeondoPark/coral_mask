@@ -74,11 +74,12 @@ def append_objs_to_img(cv2_im, objs, labels):
 
 # This part will run when module is invoked
 def main():
-    default_model_dir = './all_models'
+    #default_model_dir = './all_models'
     
     # Set face detection model
     # default_model = 'mobilenet_ssd_v2_face_quant_postprocess_edgetpu.tflite' # Coral ver
-    default_model = 'mobilenet_ssd_v2_face_quant_postprocess.tflite' # GPU ver
+    # default_model = 'mobilenet_ssd_v2_face_quant_postprocess.tflite' # GPU ver
+    default_model = './1NN/quantized/two_nn_nomask.tflite' # GPU ver
     default_labels = 'face_labels.txt'  
     
     parser = argparse.ArgumentParser()
@@ -86,7 +87,7 @@ def main():
                         default = default_model)                
     
     # Set mask classification model
-    default_model2 = 'mask_detector_quant.tflite' # GPU ver
+    default_model2 = './all_models/mask_detector_quant.tflite' # GPU ver
     #default_model2 = 'mask_detector_quant_edgetpu.tflite' #Coral ver
     parser.add_argument('--model2', help='.tflite model path',
                         default=default_model2)
