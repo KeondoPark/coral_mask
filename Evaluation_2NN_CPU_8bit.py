@@ -145,7 +145,6 @@ def main():
         # Load Image, get height and width
         cv2_im = cv2.imread(image_path,1)
         height, width, channels = cv2_im.shape
-        print('height and width: ', height, width)
 
         # Get ground truths
         all = root.findall('object')
@@ -205,7 +204,6 @@ def main():
             xmin, ymin, xmax, ymax = obj_bbox
             xmin, ymin, xmax, ymax = int(xmin*width), int(ymin*height), int(xmax*width), int(ymax*height)
             unnorm = [xmin, ymin, xmax, ymax]
-            print(xmin, ymin, xmax, ymax)
             top_left, bottom_right = (xmin, ymax), (xmax, ymin)
             #color = (255, 0, 0)
             #thickness = 2
