@@ -88,7 +88,7 @@ def main():
     
     # Set mask classification model
     # default_model2 = 'mask_detector_quant.tflite' # GPU ver
-    default_model2 = './all_models/mask_detector_quant_edgetpu.tflite' # Coral ver
+    default_model2 = 'mask_detector_quant_edgetpu.tflite' # Coral ver
     parser.add_argument('--model2', help='.tflite model path',
                         default=default_model2)
     
