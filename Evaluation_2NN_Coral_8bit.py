@@ -225,16 +225,16 @@ def main():
             mask_detection_count += 1
 
             # print(output_data)
-            mask = output_data[0]
-            withoutMask = output_data[1]
+            mask = output_data[1]
+            withoutMask = output_data[0]
             print('mask_percentage: ', mask, ', nomask_percentage: ', withoutMask) 
 
             if mask > withoutMask:
                 label = "mask"
-                score = mask
+                score = mask * objs[i].score
             else:
                 label = "nomask"
-                score = withoutMask
+                score = withoutMask * objs[i].score
             print(obj_bbox, label, score)
 
             with open("./mAP/2NN_Coral_8bit_detections/{}.txt".format(filenum), "a+") as file:
