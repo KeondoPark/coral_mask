@@ -159,12 +159,14 @@ def main():
         pil_im = Image.fromarray(cv2_im_rgb)
     
         common.set_input2(interpreter2, pil_im)
-        output_data = common.output_tensor2(interpreter2)
+
 
         # Latency calculation
         mask_start_time = time.time()
         interpreter2.invoke()
         mask_end_time = time.time()
+        
+        output_data = common.output_tensor2(interpreter2)
         total_maskdetection_time += mask_end_time - mask_start_time
         mask_detection_count += 1
 

@@ -153,8 +153,10 @@ def main():
             x0, y0, x1, y1 = int(x0*width), int(y0*height), int(x1*width), int(y1*height)                        
             pil_im2 = Image.fromarray(cv2_im_rgb[y0:y1, x0:x1])            
             common.set_input2(interpreter2, pil_im2)
-            output_data = common.output_tensor2(interpreter2)
+
             interpreter2.invoke()                   
+            
+            output_data = common.output_tensor2(interpreter2)
             mask_data.append((len(objs) - 1 - i, output_data))   
         
         j = 0

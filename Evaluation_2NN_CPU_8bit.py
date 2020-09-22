@@ -211,12 +211,14 @@ def main():
 
             pil_im2 = Image.fromarray(cv2_im_rgb[ymin:ymax, xmin:xmax])            
             common.set_input2(interpreter2, pil_im2)
-            output_data = common.output_tensor2(interpreter2)
+
 
             # Latency calculation
             mask_start_time = time.time()
             interpreter2.invoke()
-            mask_end_time = time.time()
+            mask_end_time = time.time()            
+            output_data = common.output_tensor2(interpreter2)
+
             total_maskdetection_time += mask_end_time - mask_start_time
             mask_detection_count += 1
 
@@ -227,10 +229,10 @@ def main():
 
             if mask > withoutMask:
                 label = "mask"
-                score = mask
+                score = mask * objs[i].score
             else:
                 label = "nomask"
-                score = withoutMask
+                score = withoutMask * objs[i].score
             #print(obj_bbox, label, score)
 
             with open("./mAP/2NN_CPU_8bit_detections/{}.txt".format(filenum), "a+") as file:

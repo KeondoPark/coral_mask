@@ -192,7 +192,7 @@ def main():
         face_detection_count += 1
         
         objs = get_output(interpreter)#score_threshold=args.threshold, top_k=args.top_k)
-        print('detection result:', objs)
+        #print('detection result:', objs)
         
         for i in range(len(objs)):
             if objs[i].id != 0:
@@ -215,18 +215,21 @@ def main():
 
             pil_im2 = Image.fromarray(cv2_im_rgb[ymin:ymax, xmin:xmax])            
             common.set_input2(interpreter2, pil_im2)
-            output_data = common.output_tensor2(interpreter2)
+
 
             # Latency calculation
             mask_start_time = time.time()
             interpreter2.invoke()
             mask_end_time = time.time()
+
+            output_data = common.output_tensor2(interpreter2)
+
             total_maskdetection_time += mask_end_time - mask_start_time
             mask_detection_count += 1
 
             # print(output_data)
-            mask = output_data[1]
-            withoutMask = output_data[0]
+            mask = output_data[0]
+            withoutMask = output_data[1]
             print('mask_percentage: ', mask, ', nomask_percentage: ', withoutMask) 
 
             if mask > withoutMask:
