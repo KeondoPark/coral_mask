@@ -54,7 +54,9 @@ interpreter2.allocate_tensors()
 #####################################################################################  
 ```
 
-
+## Changes(2020.10.12)
+Training and Test images are removed.
+Old tflite models are deleted, they were used for test purpose.
 
 
 Below is original description from Google.
