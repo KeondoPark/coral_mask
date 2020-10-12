@@ -58,8 +58,9 @@ interpreter2.allocate_tensors()
 Training and Test images are removed.
 Old tflite models are deleted, they were used for test purpose.
 
+---------------------------------------------------------------------------------------------
 
-Below is original description from Google.
+*Below is original description from Google.*
 
 # OpenCV camera examples with Coral
 
